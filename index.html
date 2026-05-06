@@ -5447,7 +5447,7 @@ async function saveProveedores() {
 // ─── COMPUTATIONS ─────────────────────────────────────────────────────────────
 function computeSaldos() {
   let sP=0, sU=0;
-  const sorted = [...movimientos].sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const sorted = [...movimientos].sort((a,b)=>b.fecha.localeCompare(a.fecha));
   sorted.forEach(m=>{
     sP += (m.ingPesos||0) - Math.abs(m.egPesos||0);
     sU += (m.ingUSD||0)   - Math.abs(m.egUSD||0);
