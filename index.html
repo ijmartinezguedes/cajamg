@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!-- saved from url=(0051)file:///C:/Users/Supervisor/Downloads/index_11.html -->
 <html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -104,6 +103,34 @@ tr:hover td{background:#f8fafc}
 .badge-eg{background:var(--red-light);color:var(--red)}
 .btn-del{width:26px;height:26px;border-radius:50%;background:none;border:1.5px solid var(--border);color:var(--text3);font-size:14px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
 .btn-del:hover{background:var(--red-light);border-color:var(--red);color:var(--red)}
+
+/* CONCILIACIÓN */
+.conc-upload-bar{display:flex;gap:20px;align-items:flex-end;flex-wrap:wrap;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.conc-field{display:flex;flex-direction:column;gap:6px}
+.conc-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text3)}
+.conc-drop{padding:10px 16px;border:1.5px dashed var(--border);border-radius:8px;background:var(--surface2);cursor:pointer;font-size:13px;color:var(--text2);transition:.15s;min-width:280px}
+.conc-drop:hover{border-color:var(--teal);color:var(--teal-dark)}
+.conc-alert{background:#fff4e5;border:1.5px solid #e8a94a;color:#8a5a10;border-radius:8px;padding:12px 16px;font-size:13px;margin-bottom:18px;font-weight:600}
+.conc-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+.conc-stat{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:16px 18px}
+.conc-stat-num{font-size:24px;font-weight:700;line-height:1}
+.conc-stat-label{font-size:11px;color:var(--text3);font-weight:600;margin-top:6px;text-transform:uppercase;letter-spacing:.4px}
+.conc-stat.ok .conc-stat-num{color:var(--green)}
+.conc-stat.warn .conc-stat-num{color:#c99a2e}
+.conc-stat.err .conc-stat-num{color:var(--red)}
+.conc-group{margin-bottom:28px}
+.conc-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.conc-row{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;background:#fff;font-size:13px}
+.conc-row.ambig{border-color:#e8c368;background:#fffaf0}
+.conc-row.miss{border-color:var(--red);background:var(--red-light)}
+.conc-row .conc-date{font-family:'IBM Plex Mono',monospace;color:var(--text2);width:78px;flex-shrink:0}
+.conc-row .conc-desc{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.conc-row .conc-monto{font-weight:700;font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.conc-row .conc-monto.ing{color:var(--green)}
+.conc-row .conc-monto.eg{color:var(--red)}
+.conc-row select{padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:inherit;font-size:12px}
+.conc-row button{padding:5px 12px;border-radius:6px;border:none;background:var(--teal);color:#fff;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.conc-row button:hover{background:var(--teal-dark)}
 
 /* FILTER BAR */
 .filter-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
@@ -244,6 +271,20 @@ body{display:flex;min-height:100vh}
 .mon-filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .mon-filter-btn.active-peso{background:var(--teal);border-color:var(--teal);color:#fff}
 .mon-filter-btn.active-usd{background:#4a7fa5;border-color:#4a7fa5;color:#fff}
+.mon-filter-btn.active-ing{background:var(--green);border-color:var(--green);color:#fff}
+.mon-filter-btn.active-eg{background:var(--red);border-color:var(--red);color:#fff}
+.filter-divider{width:1px;height:18px;background:var(--border);margin:0 2px}
+/* saldo a fecha */
+.saldo-fecha-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1.5px solid var(--border);background:#fff;font-family:inherit;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:.15s}
+.saldo-fecha-btn:hover{border-color:var(--teal);color:var(--teal-dark)}
+.sf-result{margin-top:18px;display:none}
+.sf-result.show{display:block}
+.sf-result-row{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:8px;background:var(--surface2);margin-bottom:10px}
+.sf-result-row:last-child{margin-bottom:0}
+.sf-result-label{font-size:12px;color:var(--text2);font-weight:600}
+.sf-result-value{font-size:20px;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.sf-result-value.neg{color:var(--red)}
+.sf-result-value.pos{color:var(--accent)}
 /* boton editar */
 .btn-edit{width:26px;height:26px;border-radius:50%;background:none;border:1.5px solid var(--border);color:var(--text3);font-size:12px;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;line-height:1;padding:0}
 .btn-edit:hover{background:#eef6ff;border-color:#4a7fa5;color:#4a7fa5}
@@ -462,6 +503,9 @@ body{display:flex;min-height:100vh}
     <button class="sidebar-nav-btn" onclick="showTab(&#39;cuentas&#39;, this)">
       <span class="nav-icon">🏦</span> Cuentas Bancarias
     </button>
+    <button class="sidebar-nav-btn" onclick="showTab(&#39;conciliacion&#39;, this)">
+      <span class="nav-icon">🔄</span> Conciliación
+    </button>
   </nav>
   <div class="sidebar-export">
     <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
@@ -543,10 +587,17 @@ body{display:flex;min-height:100vh}
       <span class="panel-section-title">Últimos Movimientos <span id="panelMovCount" style="font-size:11px;color:#bbb;font-weight:400"></span></span>
       <div style="display:flex;gap:10px;align-items:center">
         <div class="mon-filter">
+          <button class="mon-filter-btn active" id="pfTipoAll" onclick="setPanelTipo('todos')">Todos</button>
+          <button class="mon-filter-btn" id="pfTipoIng" onclick="setPanelTipo('ing')">↑ Ingresos</button>
+          <button class="mon-filter-btn" id="pfTipoEg" onclick="setPanelTipo('eg')">↓ Egresos</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="mon-filter">
           <button class="mon-filter-btn active" id="pfAll" onclick="setPanelMon('todos')">Todos</button>
           <button class="mon-filter-btn" id="pfPeso" onclick="setPanelMon('peso')">$ Pesos</button>
           <button class="mon-filter-btn" id="pfUSD" onclick="setPanelMon('usd')">USD</button>
         </div>
+        <button class="saldo-fecha-btn" onclick="openSaldoFecha()">📅 Saldo a fecha</button>
         <button class="btn btn-primary btn-sm" onclick="openNuevoMov()" style="padding:6px 14px;font-size:12px;border-radius:6px">+ Nuevo movimiento</button>
         <button class="panel-link" onclick="showTab2(&#39;historial&#39;)">Ver todos →</button>
       </div>
@@ -610,10 +661,16 @@ body{display:flex;min-height:100vh}
         <span class="filter-label" style="margin-left:8px">Buscar:</span>
         <input type="text" class="filter-search" id="histSearch" placeholder="Buscar en descripción..." oninput="renderHistorial()">
         <div class="mon-filter" style="margin-left:8px">
+          <button class="mon-filter-btn active" id="hfTipoAll" onclick="setHistTipo('todos')">Todos</button>
+          <button class="mon-filter-btn" id="hfTipoIng" onclick="setHistTipo('ing')">↑ Ingresos</button>
+          <button class="mon-filter-btn" id="hfTipoEg" onclick="setHistTipo('eg')">↓ Egresos</button>
+        </div>
+        <div class="mon-filter" style="margin-left:8px">
           <button class="mon-filter-btn active" id="hfAll" onclick="setHistMon('todos')">Todos</button>
           <button class="mon-filter-btn" id="hfPeso" onclick="setHistMon('peso')">$ Pesos</button>
           <button class="mon-filter-btn" id="hfUSD" onclick="setHistMon('usd')">USD</button>
         </div>
+        <button class="saldo-fecha-btn" onclick="openSaldoFecha()">📅 Saldo a fecha</button>
       </div>
     </div>
     <div class="panel-table-wrap">
@@ -673,6 +730,57 @@ body{display:flex;min-height:100vh}
       <div class="prov-count" id="provCount"></div>
       <div class="prov-grid" id="provGrid">
         <div class="loading">Cargando...</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- CONCILIACIÓN TAB -->
+<div id="tab-conciliacion" class="tab-content">
+<div class="main">
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">🔄 Conciliación Bancaria</span>
+    </div>
+    <div class="section-body">
+      <div class="conc-upload-bar">
+        <div class="conc-field">
+          <label class="conc-label">Cuenta / Moneda del extracto</label>
+          <select class="filter-select" id="concMoneda">
+            <option value="peso">$ Pesos</option>
+            <option value="usd">U$S Dólares</option>
+          </select>
+        </div>
+        <div class="conc-field" id="concFileZone" onclick="document.getElementById('concFile').click()">
+          <label class="conc-label">Extracto bancario (.xls / .xlsx)</label>
+          <div class="conc-drop">
+            <span id="concFileName">📎 Tocá para elegir el archivo del banco</span>
+          </div>
+          <input type="file" id="concFile" accept=".xls,.xlsx" style="display:none" onchange="onConcFileChange(this)">
+        </div>
+        <div class="conc-field">
+          <label class="conc-label">Margen de tolerancia (monto)</label>
+          <input type="number" class="filter-select" id="concMargen" value="5.00" min="0" step="0.01" style="width:100px" onchange="reconciliarConMargen()">
+        </div>
+        <div class="conc-field">
+          <label class="conc-label">Margen de tolerancia (días)</label>
+          <input type="number" class="filter-select" id="concMargenDias" value="5" min="0" max="10" step="1" style="width:80px" onchange="reconciliarConMargen()">
+        </div>
+      </div>
+      <div id="concEmpty" class="empty">
+        <div class="empty-icon">🔄</div>
+        <div class="empty-text">Subí un extracto para comparar los movimientos del banco contra los de Caja MG</div>
+      </div>
+      <div id="concResults" style="display:none">
+        <div id="concWarning"></div>
+        <div class="conc-summary" id="concSummary"></div>
+        <div id="concAmbiguos"></div>
+        <div id="concAgrupados"></div>
+        <div id="concInternos"></div>
+        <div id="concFaltanEnCaja"></div>
+        <div id="concFaltanEnBanco"></div>
+        <div id="concOk"></div>
       </div>
     </div>
   </div>
@@ -889,6 +997,31 @@ body{display:flex;min-height:100vh}
   </div>
 </div>
 
+<!-- MODAL SALDO A FECHA -->
+<div class="modal-overlay" id="saldoFechaModal">
+  <div class="modal modal-form">
+    <div class="modal-title">📅 Saldo histórico a una fecha</div>
+    <div class="modal-text">Consultá cuál era el saldo en caja al finalizar el día elegido.</div>
+    <div class="form-group full" style="margin:16px 0">
+      <label class="form-label">Fecha</label>
+      <input type="date" class="form-input" id="sfFecha" onchange="consultarSaldoFecha()">
+    </div>
+    <div class="sf-result" id="sfResult">
+      <div class="sf-result-row">
+        <span class="sf-result-label">Saldo en Pesos Uruguayos</span>
+        <span class="sf-result-value" id="sfSaldoPesos">—</span>
+      </div>
+      <div class="sf-result-row">
+        <span class="sf-result-label">Saldo en Dólares</span>
+        <span class="sf-result-value" id="sfSaldoUSD">—</span>
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top:20px">
+      <button class="btn btn-secondary" onclick="closeSaldoFecha()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const INIT_MOVS = [{"id":"init_1","fecha":"2026-01-04","desc":"AJUSTE","ingPesos":321381.57,"egPesos":null,"ingUSD":null,"egUSD":-3607.0},{"id":"init_2","fecha":"2026-01-05","desc":"C.1533 DUA 119947 - VILLALDAMA SA - SALDO PENDIENTE","ingPesos":null,"egPesos":null,"ingUSD":305.0,"egUSD":null},{"id":"init_3","fecha":"2026-01-07","desc":"C.2134 - DUA 165580 - ARLUVER SA - pago stock","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":345.0},{"id":"init_4","fecha":"2026-01-08","desc":"comision giro en plaza","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1.8},{"id":"init_5","fecha":"2026-01-08","desc":"pago serv","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":190.0},{"id":"init_6","fecha":"2026-01-09","desc":"pago antel online","ingPesos":null,"egPesos":1065.19,"ingUSD":null,"egUSD":null},{"id":"init_7","fecha":"2026-01-09","desc":"pago ute online","ingPesos":null,"egPesos":4804.0,"ingUSD":null,"egUSD":null},{"id":"init_8","fecha":"2026-01-09","desc":"pago pablo rivera","ingPesos":null,"egPesos":5000.0,"ingUSD":null,"egUSD":null},{"id":"init_9","fecha":"2026-01-09","desc":"alcon","ingPesos":null,"egPesos":null,"ingUSD":1146.0,"egUSD":null},{"id":"init_10","fecha":"2026-01-09","desc":"pago anp alcon","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":237.0},{"id":"init_11","fecha":"2026-01-09","desc":"pago concrexur","ingPesos":46361.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_12","fecha":"2026-01-09","desc":"pago inversia","ingPesos":18812.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_13","fecha":"2026-01-09","desc":"cambio","ingPesos":34119.0,"egPesos":null,"ingUSD":null,"egUSD":900.0},{"id":"init_14","fecha":"2026-01-09","desc":"pago sueldo carla","ingPesos":null,"egPesos":73039.0,"ingUSD":null,"egUSD":null},{"id":"init_15","fecha":"2026-01-09","desc":"pago sueldo rulo + complemento","ingPesos":null,"egPesos":48900.0,"ingUSD":null,"egUSD":null},{"id":"init_16","fecha":"2026-01-09","desc":"pago sueldo juan","ingPesos":null,"egPesos":51972.0,"ingUSD":null,"egUSD":null},{"id":"init_17","fecha":"2026-01-09","desc":"C 2177 ALCON ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":226.0},{"id":"init_18","fecha":"2026-01-10","desc":"Adau pesos","ingPesos":null,"egPesos":7673.8,"ingUSD":null,"egUSD":null},{"id":"init_19","fecha":"2026-01-12","desc":"GELISAR A CUENTA","ingPesos":null,"egPesos":null,"ingUSD":3077.0,"egUSD":null},{"id":"init_20","fecha":"2026-01-13","desc":"GELISAR MONTECON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1128.0},{"id":"init_21","fecha":"2026-01-13","desc":"GELISAR ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":58.0},{"id":"init_22","fecha":"2026-01-13","desc":"GELISAR DEV VACIO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":205.0},{"id":"init_23","fecha":"2026-01-13","desc":"COM POR GIRO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1.8},{"id":"init_24","fecha":"2026-01-13","desc":"FACTURA A801","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":97.0},{"id":"init_25","fecha":"2026-01-14","desc":"C 2143 ALCON HONO","ingPesos":null,"egPesos":null,"ingUSD":524.0,"egUSD":null},{"id":"init_26","fecha":"2026-01-14","desc":"C 2143 ALCON ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":33.0},{"id":"init_27","fecha":"2026-01-15","desc":"LIQ ADUANAS C. 2174 CONCREXUR","ingPesos":null,"egPesos":39513.0,"ingUSD":null,"egUSD":null},{"id":"init_28","fecha":"2026-01-15","desc":"CAMBIO","ingPesos":37640.0,"egPesos":null,"ingUSD":null,"egUSD":1000.0},{"id":"init_29","fecha":"2026-01-16","desc":"ENRIQUE MILANS","ingPesos":null,"egPesos":null,"ingUSD":3882.4,"egUSD":null},{"id":"init_30","fecha":"2026-01-16","desc":"ANP C. ????","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1721.0},{"id":"init_31","fecha":"2026-01-16","desc":"REP VACIO GELISAR STL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":32.4},{"id":"init_32","fecha":"2026-01-16","desc":"TCP C.????","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1286.47},{"id":"init_33","fecha":"2026-01-16","desc":"SANTANDER INGRESO ????????","ingPesos":null,"egPesos":null,"ingUSD":1761.0,"egUSD":null},{"id":"init_34","fecha":"2026-01-16","desc":"COSTO DEPOSITO CORRESPONSAL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.46},{"id":"init_35","fecha":"2026-01-16","desc":"DEP.OTRO REDPAGOS EMILIANO","ingPesos":null,"egPesos":null,"ingUSD":62.0,"egUSD":null},{"id":"init_36","fecha":"2026-01-18","desc":"COBRO PERIODICO DE COMISIONES DE GARANTIAS","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":45.0},{"id":"init_37","fecha":"2026-01-19","desc":"CONCREXUR","ingPesos":12765.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_38","fecha":"2026-01-19","desc":"NIDOX","ingPesos":162582.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_39","fecha":"2026-01-19","desc":"NIDOX","ingPesos":162582.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_40","fecha":"2026-01-19","desc":"PAGO DUA NIDOX","ingPesos":null,"egPesos":243568.0,"ingUSD":null,"egUSD":null},{"id":"init_41","fecha":"2026-01-19","desc":"retiro nacho","ingPesos":null,"egPesos":20000.0,"ingUSD":null,"egUSD":75.0},{"id":"init_42","fecha":"2026-01-19","desc":"pago Fact 35017","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":469.7},{"id":"init_43","fecha":"2026-01-19","desc":"PAGO TCU DOL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":44.0},{"id":"init_44","fecha":"2026-01-19","desc":"comision giro en plaza - retiro stock DFSU6738084","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.51},{"id":"init_45","fecha":"2026-01-19","desc":"retiro stock DFSU6738084","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":230.0},{"id":"init_46","fecha":"2026-01-19","desc":"comision giro en plaza - retiro stock DFSU6738084","ingPesos":null,"egPesos":null,"ingUSD":2.51,"egUSD":null},{"id":"init_47","fecha":"2026-01-19","desc":"retiro stock DFSU6738084","ingPesos":null,"egPesos":null,"ingUSD":230.0,"egUSD":null},{"id":"init_48","fecha":"2026-01-19","desc":"comision giro en plaza - retiro stock DFSU6738084","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1.8},{"id":"init_49","fecha":"2026-01-19","desc":"retiro stock DFSU6738084","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":230.0},{"id":"init_50","fecha":"2026-01-19","desc":"Pago sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":58.0},{"id":"init_51","fecha":"2026-01-19","desc":"Pago sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":360.76},{"id":"init_52","fecha":"2026-01-20","desc":"pago tcp un dia mas c. 2175 gelisar","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":217.0},{"id":"init_53","fecha":"2026-01-20","desc":"PAGO ??????","ingPesos":null,"egPesos":5936.0,"ingUSD":null,"egUSD":null},{"id":"init_54","fecha":"2026-01-20","desc":"Pago Matias Reyes SIBEL","ingPesos":null,"egPesos":1890.0,"ingUSD":null,"egUSD":null},{"id":"init_55","fecha":"2026-01-20","desc":"Pgo sueldo sandra dic","ingPesos":null,"egPesos":3189.0,"ingUSD":null,"egUSD":null},{"id":"init_56","fecha":"2026-01-21","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":672.22},{"id":"init_57","fecha":"2026-01-21","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":538.5},{"id":"init_58","fecha":"2026-01-21","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":190.0},{"id":"init_59","fecha":"2026-01-21","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":228.86},{"id":"init_60","fecha":"2026-01-21","desc":"Pago imesi NIDOX","ingPesos":null,"egPesos":26651.0,"ingUSD":null,"egUSD":null},{"id":"init_61","fecha":"2026-01-21","desc":"Cambio","ingPesos":25000.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_62","fecha":"2026-01-21","desc":"Cambio","ingPesos":20000.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_63","fecha":"2026-01-21","desc":"pago BPS OCT 2025","ingPesos":null,"egPesos":79118.0,"ingUSD":null,"egUSD":null},{"id":"init_64","fecha":"2026-01-21","desc":"cambio","ingPesos":8500.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_65","fecha":"2026-01-21","desc":"Pago trnasitos","ingPesos":null,"egPesos":8306.0,"ingUSD":null,"egUSD":null},{"id":"init_66","fecha":"2026-01-22","desc":"ingresa nacho","ingPesos":80000.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_67","fecha":"2026-01-22","desc":"magali cambre simulación de costos","ingPesos":null,"egPesos":null,"ingUSD":50.0,"egUSD":null},{"id":"init_68","fecha":"2026-01-22","desc":"COSTO DEPOSITO CORRESPONSAL","ingPesos":null,"egPesos":94.4,"ingUSD":null,"egUSD":null},{"id":"init_69","fecha":"2026-01-22","desc":"Pago muestras Martin Reyes","ingPesos":14823.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_70","fecha":"2026-01-22","desc":"cambio","ingPesos":10000.0,"egPesos":null,"ingUSD":null,"egUSD":273.6},{"id":"init_71","fecha":"2026-01-22","desc":"Pago DUA ENrique MIlans 2184","ingPesos":null,"egPesos":104934.0,"ingUSD":null,"egUSD":null},{"id":"init_72","fecha":"2026-01-22","desc":"Pago agua El DUende","ingPesos":null,"egPesos":820.0,"ingUSD":null,"egUSD":null},{"id":"init_73","fecha":"2026-01-22","desc":"Pago ANP ENrique MIlans 2184","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":152.0},{"id":"init_74","fecha":"2026-01-22","desc":"cambio","ingPesos":150.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_75","fecha":"2026-01-22","desc":"muestras martin reyes","ingPesos":null,"egPesos":650.0,"ingUSD":null,"egUSD":null},{"id":"init_76","fecha":"2026-01-22","desc":"PAGO DEPOSITO ENrique MIlans 2184","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":250.0},{"id":"init_77","fecha":"2026-01-23","desc":"cambio","ingPesos":368.7,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_78","fecha":"2026-01-23","desc":"comision","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":4.31},{"id":"init_79","fecha":"2026-01-23","desc":"C 2185 C 2179 ALCON HONO","ingPesos":null,"egPesos":null,"ingUSD":1089.0,"egUSD":null},{"id":"init_80","fecha":"2026-01-23","desc":"c.2069 y 2131 - honorarios","ingPesos":null,"egPesos":null,"ingUSD":1128.56,"egUSD":null},{"id":"init_81","fecha":"2026-01-23","desc":"transferencias itau - sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":800.0},{"id":"init_82","fecha":"2026-01-23","desc":"C 2185 C 2179 ALCON ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":309.0},{"id":"init_83","fecha":"2026-01-23","desc":"pago factura 11781","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":469.4},{"id":"init_84","fecha":"2026-01-26","desc":"ANP regularizacion AT inversia","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":371.0},{"id":"init_85","fecha":"2026-01-26","desc":"VUCE TIMBRE","ingPesos":null,"egPesos":225.0,"ingUSD":null,"egUSD":null},{"id":"init_86","fecha":"2026-01-26","desc":"ANP regularizacion AT inversia","ingPesos":160522.0,"egPesos":null,"ingUSD":371.0,"egUSD":null},{"id":"init_88","fecha":"2026-01-26","desc":"C 2144 MACHADO HONO","ingPesos":null,"egPesos":null,"ingUSD":818.0,"egUSD":null},{"id":"init_89","fecha":"2026-01-26","desc":"cambio","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":10.0},{"id":"init_90","fecha":"2026-01-26","desc":"C 2144 MACHADO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":404.0},{"id":"init_91","fecha":"2026-01-27","desc":"ALQUILER MES NOVIEMBRE","ingPesos":null,"egPesos":38000.0,"ingUSD":null,"egUSD":null},{"id":"init_92","fecha":"2026-01-27","desc":"PABLO RODRIGUEZ GESTOR ZFF","ingPesos":null,"egPesos":9700.0,"ingUSD":null,"egUSD":null},{"id":"init_93","fecha":"2026-01-27","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":286.0},{"id":"init_94","fecha":"2026-01-27","desc":"pago facturas nuestras suspentech","ingPesos":null,"egPesos":null,"ingUSD":774.0,"egUSD":null},{"id":"init_95","fecha":"2026-01-28","desc":"ANTEL","ingPesos":null,"egPesos":1210.52,"ingUSD":null,"egUSD":null},{"id":"init_96","fecha":"2026-01-28","desc":"movimiento interno sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":475.0},{"id":"init_97","fecha":"2026-01-28","desc":"Comision por transferencia","ingPesos":null,"egPesos":96.31,"ingUSD":null,"egUSD":1.8},{"id":"init_98","fecha":"2026-01-28","desc":"C 1957 F. 29071 a 29073 STARFISH","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":740.0},{"id":"init_99","fecha":"2026-01-28","desc":"C 2200 ALCON","ingPesos":null,"egPesos":null,"ingUSD":458.0,"egUSD":null},{"id":"init_100","fecha":"2026-01-28","desc":"C 2200 ALCON ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":68.0},{"id":"init_101","fecha":"2026-01-30","desc":"C 2199 MARTIN HONO","ingPesos":null,"egPesos":null,"ingUSD":625.0,"egUSD":null},{"id":"init_102","fecha":"2026-01-30","desc":"PAGO TCU DOL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":30.0},{"id":"init_103","fecha":"2026-01-30","desc":"PAGO TCU DOL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":52.0},{"id":"init_104","fecha":"2026-01-30","desc":"pago pablo rodriguez chuy","ingPesos":null,"egPesos":3400.0,"ingUSD":null,"egUSD":null},{"id":"init_105","fecha":"2026-01-30","desc":"C 2174 PAGO FLETE INTERNO","ingPesos":null,"egPesos":2200.0,"ingUSD":null,"egUSD":null},{"id":"init_106","fecha":"2026-01-31","desc":"Pago saldo pendiente SANTANDER / ANALIA RODRIGUEZ","ingPesos":19632.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_107","fecha":"2026-01-31","desc":"CALCULO Y CONTABILIZACIÓN INTERESES VISTA","ingPesos":null,"egPesos":10.59,"ingUSD":null,"egUSD":0.01},{"id":"init_108","fecha":"2026-01-31","desc":"PAGO DE INTERESES","ingPesos":192.56,"egPesos":null,"ingUSD":0.11,"egUSD":null},{"id":"init_109","fecha":"2026-02-02","desc":"Transferencia FABRIZIO BERRIOLO","ingPesos":null,"egPesos":null,"ingUSD":91.0,"egUSD":null},{"id":"init_110","fecha":"2026-02-02","desc":"COM GIRO","ingPesos":null,"egPesos":69.3,"ingUSD":null,"egUSD":null},{"id":"init_111","fecha":"2026-02-02","desc":"FLETE GUILLERMO PEREZ","ingPesos":null,"egPesos":2200.0,"ingUSD":null,"egUSD":null},{"id":"init_112","fecha":"2026-02-02","desc":"PAGO DUA","ingPesos":null,"egPesos":2392.0,"ingUSD":null,"egUSD":null},{"id":"init_113","fecha":"2026-02-02","desc":"COSTO DEPOSITO CORRESPONSAL","ingPesos":null,"egPesos":94.36,"ingUSD":null,"egUSD":null},{"id":"init_114","fecha":"2026-02-02","desc":"PAGO AGUA EL DUENDE","ingPesos":null,"egPesos":820.0,"ingUSD":null,"egUSD":null},{"id":"init_115","fecha":"2026-02-02","desc":"????????","ingPesos":null,"egPesos":1828.0,"ingUSD":null,"egUSD":null},{"id":"init_116","fecha":"2026-02-02","desc":"PAGO SIBEL UPS GUIA","ingPesos":null,"egPesos":1890.0,"ingUSD":null,"egUSD":null},{"id":"init_117","fecha":"2026-02-02","desc":"pago bps noviembre","ingPesos":null,"egPesos":100527.0,"ingUSD":null,"egUSD":null},{"id":"init_118","fecha":"2026-02-02","desc":"retiro nacho","ingPesos":null,"egPesos":10000.0,"ingUSD":null,"egUSD":null},{"id":"init_119","fecha":"2026-02-03","desc":"pago guillermo perez","ingPesos":null,"egPesos":2000.0,"ingUSD":null,"egUSD":null},{"id":"init_120","fecha":"2026-02-03","desc":"C.2218 - DUA 035948 - PAGO COTIZACION - AXEL VERMERSCH","ingPesos":null,"egPesos":null,"ingUSD":50.0,"egUSD":null},{"id":"init_121","fecha":"2026-02-03","desc":"voladores guille iduate","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":200.0},{"id":"init_122","fecha":"2026-02-04","desc":"Comision giro en plaza","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1.82},{"id":"init_123","fecha":"2026-02-04","desc":"timbres y limpieza juan","ingPesos":null,"egPesos":450.0,"ingUSD":null,"egUSD":null},{"id":"init_124","fecha":"2026-02-04","desc":"C 2149 C 2199","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":238.51},{"id":"init_125","fecha":"2026-02-04","desc":"C 2149 C 2199","ingPesos":null,"egPesos":8906.0,"ingUSD":null,"egUSD":null},{"id":"init_126","fecha":"2026-02-04","desc":"C 2205 C 2206 PAGO ANP ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":610.0},{"id":"init_127","fecha":"2026-02-04","desc":"C 2205 C 2206 HONORIARIOS ALCON","ingPesos":null,"egPesos":null,"ingUSD":1441.0,"egUSD":null},{"id":"init_128","fecha":"2026-02-04","desc":"TRANSFERENCIA SIN ASUNTO","ingPesos":null,"egPesos":null,"ingUSD":1685.0,"egUSD":null},{"id":"init_129","fecha":"2026-02-05","desc":"DEPOSITO MATIAS REYES DUA 024275","ingPesos":14823.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_130","fecha":"2026-02-05","desc":"Pago Transito","ingPesos":null,"egPesos":1196.0,"ingUSD":null,"egUSD":null},{"id":"init_131","fecha":"2026-02-05","desc":"Cambio scotia","ingPesos":146475.0,"egPesos":null,"ingUSD":null,"egUSD":3871.0},{"id":"init_132","fecha":"2026-02-05","desc":"pago dua 023678","ingPesos":null,"egPesos":154009.0,"ingUSD":null,"egUSD":null},{"id":"init_133","fecha":"2026-02-05","desc":"PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":1627.0,"egUSD":null},{"id":"init_134","fecha":"2026-02-05","desc":"AGUSTIN BRITO","ingPesos":null,"egPesos":null,"ingUSD":1983.0,"egUSD":null},{"id":"init_135","fecha":"2026-02-05","desc":"HAGRAF","ingPesos":8650.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_136","fecha":"2026-02-05","desc":"PAGO DUA MATIAS REYES DUA 024275","ingPesos":null,"egPesos":650.0,"ingUSD":null,"egUSD":null},{"id":"init_137","fecha":"2026-02-05","desc":"C 2201 ANP ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":413.0},{"id":"init_138","fecha":"2026-02-05","desc":"C 2201 TCP ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":506.18},{"id":"init_139","fecha":"2026-02-05","desc":"C 2201 ALCON LIQ ADUANA","ingPesos":null,"egPesos":154009.0,"ingUSD":null,"egUSD":null},{"id":"init_140","fecha":"2026-02-06","desc":"retiro nacho","ingPesos":null,"egPesos":22000.0,"ingUSD":null,"egUSD":700.0},{"id":"init_141","fecha":"2026-02-06","desc":"Cambio scotia","ingPesos":40000.0,"egPesos":null,"ingUSD":null,"egUSD":1064.4},{"id":"init_142","fecha":"2026-02-06","desc":"pago dua 025442","ingPesos":null,"egPesos":55360.0,"ingUSD":null,"egUSD":null},{"id":"init_143","fecha":"2026-02-06","desc":"CONCREXUR HONO Y GASTOS","ingPesos":73679.34,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_144","fecha":"2026-02-06","desc":"retiro nacho","ingPesos":null,"egPesos":20000.0,"ingUSD":null,"egUSD":null},{"id":"init_145","fecha":"2026-02-06","desc":"pablo gestor","ingPesos":null,"egPesos":3400.0,"ingUSD":null,"egUSD":null},{"id":"init_146","fecha":"2026-02-09","desc":"PAGO UTE","ingPesos":null,"egPesos":4816.0,"ingUSD":null,"egUSD":null},{"id":"init_147","fecha":"2026-02-09","desc":"Pago sueldo parcial carla","ingPesos":null,"egPesos":25500.0,"ingUSD":null,"egUSD":null},{"id":"init_148","fecha":"2026-02-09","desc":"PAGO TRIBUTOS DOMICILIARIOS","ingPesos":null,"egPesos":1131.0,"ingUSD":null,"egUSD":null},{"id":"init_149","fecha":"2026-02-09","desc":"comision transferencia","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.5},{"id":"init_150","fecha":"2026-02-09","desc":"C 2201 MPS ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":200.0},{"id":"init_151","fecha":"2026-02-09","desc":"TRIBUTOS DOMICILIARIOS","ingPesos":null,"egPesos":1131.0,"ingUSD":null,"egUSD":null},{"id":"init_152","fecha":"2026-02-10","desc":"ingresa nacho","ingPesos":20000.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_153","fecha":"2026-02-10","desc":"C.2214 - ACRILICOS Y MACETAS + SALDO PENDIENTE","ingPesos":null,"egPesos":null,"ingUSD":2160.0,"egUSD":null},{"id":"init_154","fecha":"2026-02-10","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":61.0},{"id":"init_155","fecha":"2026-02-10","desc":"C. 2204 ATLANTICO ASCENSORES","ingPesos":null,"egPesos":7307.0,"ingUSD":null,"egUSD":null},{"id":"init_156","fecha":"2026-02-10","desc":"pago servicio sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2076.0},{"id":"init_157","fecha":"2026-02-10","desc":"comision giro en plaza","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1.8},{"id":"init_158","fecha":"2026-02-10","desc":"pago stock 1433009","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":344.0},{"id":"init_159","fecha":"2026-02-10","desc":"tcu","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":75.0},{"id":"init_160","fecha":"2026-02-10","desc":"tcu","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":97.0},{"id":"init_161","fecha":"2026-02-10","desc":"tcu","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":21.0},{"id":"init_162","fecha":"2026-02-11","desc":"ingresa nacho","ingPesos":11500.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_163","fecha":"2026-02-11","desc":"C 2214  ALCON ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":375.0},{"id":"init_164","fecha":"2026-02-11","desc":"C 2141 C 2214 ALCON","ingPesos":null,"egPesos":null,"ingUSD":1347.0,"egUSD":null},{"id":"init_165","fecha":"2026-02-11","desc":"SUELDO PARCIAL JUAN ENERO","ingPesos":null,"egPesos":18633.0,"ingUSD":null,"egUSD":null},{"id":"init_166","fecha":"2026-02-11","desc":"egreso usd no documentado","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":280.0},{"id":"init_167","fecha":"2026-02-11","desc":"SALDO SUELDO CARLA ENERO","ingPesos":null,"egPesos":40633.0,"ingUSD":null,"egUSD":null},{"id":"init_168","fecha":"2026-02-11","desc":"CAMBIO MELO","ingPesos":37266.0,"egPesos":null,"ingUSD":null,"egUSD":973.0},{"id":"init_169","fecha":"2026-02-12","desc":"ADAU VUCE TU EXPORTA","ingPesos":1878.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_170","fecha":"2026-02-13","desc":"ingresa nacho","ingPesos":20000.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_171","fecha":"2026-02-13","desc":"BROU ??","ingPesos":4900.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_172","fecha":"2026-02-13","desc":"tcu","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":26.0},{"id":"init_173","fecha":"2026-02-13","desc":"transferencia itau","ingPesos":null,"egPesos":null,"ingUSD":50.09,"egUSD":null},{"id":"init_174","fecha":"2026-02-13","desc":"bbva cambio","ingPesos":null,"egPesos":null,"ingUSD":135.0,"egUSD":null},{"id":"init_175","fecha":"2026-02-16","desc":"C 2183  ALCON HONO","ingPesos":null,"egPesos":null,"ingUSD":482.0,"egUSD":null},{"id":"init_176","fecha":"2026-02-18","desc":"pago talones transitos gelisar","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":205.0},{"id":"init_177","fecha":"2026-02-18","desc":"ingresa nacho","ingPesos":null,"egPesos":null,"ingUSD":205.0,"egUSD":null},{"id":"init_178","fecha":"2026-02-18","desc":"C. 2210 saldo concrexur","ingPesos":2579.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_179","fecha":"2026-02-18","desc":"CRISTIAN AQUILES SIMULACION","ingPesos":null,"egPesos":null,"ingUSD":61.0,"egUSD":null},{"id":"init_180","fecha":"2026-02-18","desc":"C. 2178 SALDO HERNAN GOTTA AGUS BRITO","ingPesos":null,"egPesos":null,"ingUSD":32.0,"egUSD":null},{"id":"init_181","fecha":"2026-02-18","desc":"CAMBIO SCOTIA","ingPesos":1500.0,"egPesos":null,"ingUSD":null,"egUSD":39.4},{"id":"init_182","fecha":"2026-02-18","desc":"SALDO SUELDO JUAN ENERO","ingPesos":null,"egPesos":1448.0,"ingUSD":null,"egUSD":null},{"id":"init_183","fecha":"2026-02-18","desc":"SUELDO PARCIAL JUAN ENERO","ingPesos":null,"egPesos":22300.0,"ingUSD":null,"egUSD":null},{"id":"init_184","fecha":"2026-02-18","desc":"SALDO SUELDO CARLA ENERO","ingPesos":null,"egPesos":8389.0,"ingUSD":null,"egUSD":null},{"id":"init_185","fecha":"2026-02-18","desc":"SUELDO NACHO ENERO","ingPesos":null,"egPesos":50691.0,"ingUSD":null,"egUSD":null},{"id":"init_186","fecha":"2026-02-18","desc":"DIEGO LARCEBEAU REUNION ABOGADO","ingPesos":null,"egPesos":3500.0,"ingUSD":null,"egUSD":null},{"id":"init_187","fecha":"2026-02-18","desc":"C.2218 - AXEL VERMERSCH GIRO COSTOS DESPACHO","ingPesos":null,"egPesos":null,"ingUSD":511.4,"egUSD":null},{"id":"init_188","fecha":"2026-02-19","desc":"F. 697540 697262 696833 PRECINTOS","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":940.35},{"id":"init_189","fecha":"2026-02-19","desc":"ingresa nacho","ingPesos":null,"egPesos":null,"ingUSD":940.35,"egUSD":null},{"id":"init_190","fecha":"2026-02-19","desc":"F. 698225 698474 698627 PRECINTOS","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1081.8},{"id":"init_191","fecha":"2026-02-19","desc":"C. 2209 - ALCON HONORARIOS","ingPesos":null,"egPesos":null,"ingUSD":2711.0,"egUSD":null},{"id":"init_192","fecha":"2026-02-19","desc":"C. 2209 - PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1491.0},{"id":"init_193","fecha":"2026-02-19","desc":"C. 2209 - PAGO TCP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":506.18},{"id":"init_194","fecha":"2026-02-20","desc":"retiro nacho","ingPesos":null,"egPesos":6000.0,"ingUSD":null,"egUSD":null},{"id":"init_195","fecha":"2026-02-20","desc":"Pago miguel Sibel","ingPesos":null,"egPesos":2900.0,"ingUSD":null,"egUSD":null},{"id":"init_196","fecha":"2026-02-21","desc":"sueldo enero sandra","ingPesos":null,"egPesos":2500.0,"ingUSD":null,"egUSD":null},{"id":"init_197","fecha":"2026-02-23","desc":"Cambio usd","ingPesos":13300.0,"egPesos":null,"ingUSD":null,"egUSD":356.0},{"id":"init_198","fecha":"2026-02-23","desc":"C.2218 - DUA 035948 - PAGO DUA - AXEL VERMERSCH","ingPesos":null,"egPesos":7401.0,"ingUSD":null,"egUSD":null},{"id":"init_199","fecha":"2026-02-24","desc":"PAGO ALCON DUA 036923 DUA 03697","ingPesos":null,"egPesos":null,"ingUSD":624.2,"egUSD":null},{"id":"init_200","fecha":"2026-02-24","desc":"C.2220 DUA - 035272 - PAGO HONORARIOS,GASTOS , ETC.","ingPesos":null,"egPesos":null,"ingUSD":483.0,"egUSD":null},{"id":"init_201","fecha":"2026-02-25","desc":"CAMBIO USD","ingPesos":5000.0,"egPesos":null,"ingUSD":null,"egUSD":133.83},{"id":"init_202","fecha":"2026-02-25","desc":"saldo precintos adau","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":486.1},{"id":"init_203","fecha":"2026-02-25","desc":"C.2216 - PAGO DUA 037516 CONCREXUR","ingPesos":null,"egPesos":10126.0,"ingUSD":null,"egUSD":null},{"id":"init_204","fecha":"2026-02-25","desc":"pago serv sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":123.0},{"id":"init_205","fecha":"2026-02-25","desc":"bbva pago dua red","ingPesos":null,"egPesos":null,"ingUSD":545.0,"egUSD":null},{"id":"init_206","fecha":"2026-02-25","desc":"pago serv sin registro","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":183.0},{"id":"init_207","fecha":"2026-02-25","desc":"TCU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":25.0},{"id":"init_208","fecha":"2026-02-25","desc":"TCU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":61.0},{"id":"init_209","fecha":"2026-02-26","desc":"seña garantia 2 meses flex cowork parcial","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":500.0},{"id":"init_210","fecha":"2026-02-26","desc":"TCU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":26.0},{"id":"init_211","fecha":"2026-02-27","desc":"C.2228 - DUA040828 - WERTOL tercera impo","ingPesos":null,"egPesos":null,"ingUSD":4458.0,"egUSD":null},{"id":"init_212","fecha":"2026-02-27","desc":"Pago transito Gelisar","ingPesos":null,"egPesos":1.196,"ingUSD":null,"egUSD":null},{"id":"init_213","fecha":"2026-02-27","desc":"SALARIO VACACIONAL CARLA","ingPesos":null,"egPesos":25.761,"ingUSD":null,"egUSD":null},{"id":"init_214","fecha":"2026-02-28","desc":"Intereses vista","ingPesos":null,"egPesos":null,"ingUSD":0.01,"egUSD":null},{"id":"init_215","fecha":"2026-03-02","desc":"green informatica pesos y usd","ingPesos":null,"egPesos":5000.0,"ingUSD":null,"egUSD":48.8},{"id":"init_216","fecha":"2026-03-02","desc":"C. 2228 - DUA 040828 - pago anp","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1728.0},{"id":"init_217","fecha":"2026-03-02","desc":"seña garantía 2 meses flex cowork saldo","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":842.0},{"id":"init_218","fecha":"2026-03-02","desc":"C. 2228 - DUA 040828 - pago evergreen 3 dias libres comision transferencia","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.53},{"id":"init_219","fecha":"2026-03-02","desc":"C. 2228 - DUA 040828 - pago evergreen 3 dias libres segundo paquete","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":75.0},{"id":"init_220","fecha":"2026-03-02","desc":"C. 2228 - DUA 040828 - pago montecon","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1666.0},{"id":"init_221","fecha":"2026-03-02","desc":"comision giro en plaza","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1.8},{"id":"init_222","fecha":"2026-03-02","desc":"C. 2228 - DUA 040828 - pago evergreen 3 dias libres","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":75.0},{"id":"init_223","fecha":"2026-03-02","desc":"C.2228 - DUA 040828 - PAGO DEV VACIO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":360.0},{"id":"init_224","fecha":"2026-03-02","desc":"Cambio pesos","ingPesos":null,"egPesos":9892.0,"ingUSD":250.0,"egUSD":null},{"id":"init_225","fecha":"2026-03-02","desc":"Pago Sandra Enero 2/2","ingPesos":null,"egPesos":2430.0,"ingUSD":null,"egUSD":null},{"id":"init_226","fecha":"2026-03-02","desc":"PAGO AGUA EL DUENDE","ingPesos":null,"egPesos":470.0,"ingUSD":null,"egUSD":null},{"id":"init_227","fecha":"2026-03-02","desc":"ingreso C 2229 Maikol","ingPesos":44342.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_228","fecha":"2026-03-02","desc":"C.2228 - DUA 040828 - PAGO NIMM","ingPesos":null,"egPesos":4270.0,"ingUSD":null,"egUSD":null},{"id":"init_229","fecha":"2026-03-03","desc":"Pago Balear Factura 13462 - 13575 - 14392 - 14581 - 14775 - 15000 - 15213 - 15440","ingPesos":null,"egPesos":16400.0,"ingUSD":null,"egUSD":null},{"id":"init_230","fecha":"2026-03-04","desc":"gelisar a cuenta","ingPesos":null,"egPesos":null,"ingUSD":2226.0,"egUSD":null},{"id":"init_231","fecha":"2026-03-04","desc":"CAMBIO melo","ingPesos":78200.0,"egPesos":null,"ingUSD":null,"egUSD":2000.0},{"id":"init_232","fecha":"2026-03-04","desc":"pago scotiabank mega f. 29627","ingPesos":null,"egPesos":10947.0,"ingUSD":null,"egUSD":null},{"id":"init_233","fecha":"2026-03-04","desc":"pago scotiabank adau f. 424816","ingPesos":null,"egPesos":12828.89,"ingUSD":null,"egUSD":null},{"id":"init_234","fecha":"2026-03-05","desc":"C. 2219 PRIMIDEL ALCON","ingPesos":null,"egPesos":null,"ingUSD":521.0,"egUSD":null},{"id":"init_235","fecha":"2026-03-05","desc":"comision giro en plaza","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.47},{"id":"init_236","fecha":"2026-03-05","desc":"C.2173 -  NIDOX - PAGO INTERTRANSPACK","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":506.0},{"id":"init_237","fecha":"2026-03-05","desc":"DUA 043777 MAIKOL","ingPesos":null,"egPesos":25968.0,"ingUSD":null,"egUSD":null},{"id":"init_238","fecha":"2026-03-05","desc":"C. 2231 REFRISUD - MERCOFRIO","ingPesos":null,"egPesos":null,"ingUSD":1592.0,"egUSD":null},{"id":"init_239","fecha":"2026-03-05","desc":"pago pablo rodriguez rivera","ingPesos":null,"egPesos":3400.0,"ingUSD":null,"egUSD":null},{"id":"init_240","fecha":"2026-03-05","desc":"retiro nacho","ingPesos":null,"egPesos":10000.0,"ingUSD":null,"egUSD":null},{"id":"init_241","fecha":"2026-03-05","desc":"COM GIRO EMI PLAZA 69886223","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.47},{"id":"init_242","fecha":"2026-03-06","desc":"pago pablo rodriguez rivera","ingPesos":null,"egPesos":3940.0,"ingUSD":null,"egUSD":null},{"id":"init_243","fecha":"2026-03-06","desc":"Pago dua 045872","ingPesos":null,"egPesos":859370.0,"ingUSD":null,"egUSD":null},{"id":"init_244","fecha":"2026-03-06","desc":"INGRESO dua 045872","ingPesos":844986.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_245","fecha":"2026-03-09","desc":"Pago ANP GELISAR","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":104.0},{"id":"init_246","fecha":"2026-03-09","desc":"Pago TCP GELISAR","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":746.26},{"id":"init_247","fecha":"2026-03-09","desc":"ADAU PESOS","ingPesos":null,"egPesos":6504.06,"ingUSD":null,"egUSD":null},{"id":"init_248","fecha":"2026-03-09","desc":"ADAU PESOS","ingPesos":null,"egPesos":6504.06,"ingUSD":null,"egUSD":null},{"id":"init_249","fecha":"2026-03-09","desc":"ingreso comisiones por venta  f.2504","ingPesos":null,"egPesos":null,"ingUSD":110.0,"egUSD":null},{"id":"init_250","fecha":"2026-03-10","desc":"ALCON C.2213 MAQUINA DE LAVADO - C.2230 CAMA DE CAÑO (hono, gastos y ANP)","ingPesos":null,"egPesos":null,"ingUSD":1070.0,"egUSD":null},{"id":"init_251","fecha":"2026-03-10","desc":"AJUSTE DE CUENTA EN DOLARES","ingPesos":null,"egPesos":null,"ingUSD":4076.82,"egUSD":null},{"id":"init_252","fecha":"2026-03-10","desc":"cambio scotia","ingPesos":31000.0,"egPesos":null,"ingUSD":null,"egUSD":793.0},{"id":"init_253","fecha":"2026-03-10","desc":"retiro nacho","ingPesos":null,"egPesos":15000.0,"ingUSD":null,"egUSD":433.73},{"id":"init_254","fecha":"2026-03-10","desc":"GELISAR a cuenta","ingPesos":null,"egPesos":null,"ingUSD":3115.0,"egUSD":null},{"id":"init_255","fecha":"2026-03-11","desc":"CAMBIO","ingPesos":86782.0,"egPesos":null,"ingUSD":null,"egUSD":2175.0},{"id":"init_256","fecha":"2026-03-11","desc":"COSTO DEPOSITO CORRESPONSAL","ingPesos":null,"egPesos":190.58,"ingUSD":null,"egUSD":null},{"id":"init_257","fecha":"2026-03-11","desc":"sueldo carla feb 26 1 de 2","ingPesos":null,"egPesos":37353.0,"ingUSD":null,"egUSD":null},{"id":"init_258","fecha":"2026-03-11","desc":"sueldo rulo feb 26 1 de 2","ingPesos":null,"egPesos":23036.0,"ingUSD":null,"egUSD":null},{"id":"init_259","fecha":"2026-03-11","desc":"sueldo juan feb 26 1 de 2","ingPesos":null,"egPesos":27441.87,"ingUSD":null,"egUSD":null},{"id":"init_260","fecha":"2026-03-11","desc":"C.2213 Y C.2230 - PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":291.0},{"id":"init_261","fecha":"2026-03-11","desc":"pago transito","ingPesos":null,"egPesos":1196.0,"ingUSD":null,"egUSD":null},{"id":"init_262","fecha":"2026-03-11","desc":"retiro nacho","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":800.0},{"id":"init_263","fecha":"2026-03-11","desc":"Devolucion contenedores gelisar","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":378.0},{"id":"init_264","fecha":"2026-03-11","desc":"C2228 - WERTOL - PAGO RESTO TOTAL","ingPesos":null,"egPesos":null,"ingUSD":773.36,"egUSD":null},{"id":"init_265","fecha":"2026-03-12","desc":"C.2217 - INGRESO PAGO DOLARES RODRIGO MACHADO","ingPesos":null,"egPesos":null,"ingUSD":2670.4,"egUSD":null},{"id":"init_266","fecha":"2026-03-12","desc":"C.2217 - PAGO TCP RODRIGO MACHADO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":506.18},{"id":"init_267","fecha":"2026-03-12","desc":"C.2217 - PAGO ANP RODRIGO MACHADO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1242.0},{"id":"init_268","fecha":"2026-03-12","desc":"C.2229 - sasso evo baterias maikol","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1800.0},{"id":"init_269","fecha":"2026-03-12","desc":"C. 2229 maikol evo baterias","ingPesos":70200.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_270","fecha":"2026-03-13","desc":"C.2217 - PAGO DEV VACIO RODRIGO MACHADO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":189.0},{"id":"init_271","fecha":"2026-03-13","desc":"sueldo carla feb 26 2 de 2","ingPesos":null,"egPesos":37353.0,"ingUSD":null,"egUSD":null},{"id":"init_272","fecha":"2026-03-13","desc":"sueldo rulo feb 26 2 de 2","ingPesos":null,"egPesos":23036.0,"ingUSD":null,"egUSD":null},{"id":"init_273","fecha":"2026-03-13","desc":"retiro nacho","ingPesos":null,"egPesos":10000.0,"ingUSD":null,"egUSD":null},{"id":"init_274","fecha":"2026-03-13","desc":"Pago ANP Gelisar C 2250 C 2251","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":110.0},{"id":"init_275","fecha":"2026-03-16","desc":"TCU Maikol C 2229","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":113.0},{"id":"init_276","fecha":"2026-03-17","desc":"APORTE NACHO","ingPesos":null,"egPesos":null,"ingUSD":746.26,"egUSD":null},{"id":"init_277","fecha":"2026-03-17","desc":"Pago TCP GELISAR  C 2250 C 2251","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":746.26},{"id":"init_278","fecha":"2026-03-17","desc":"HONORARIOS SUSPENTECH C. 2252","ingPesos":null,"egPesos":null,"ingUSD":1594.0,"egUSD":null},{"id":"init_279","fecha":"2026-03-17","desc":"C 2231 PAGO SALDO MERCOFRIO","ingPesos":14378.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_280","fecha":"2026-03-17","desc":"COMPRTA TONNERS - FACTURA 110151","ingPesos":null,"egPesos":3664.0,"ingUSD":null,"egUSD":null},{"id":"init_281","fecha":"2026-03-18","desc":"devolucion compra tonners (gire de mas)","ingPesos":1295.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_282","fecha":"2026-03-18","desc":"devolucion nacho","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":746.26},{"id":"init_283","fecha":"2026-03-18","desc":"CAMBIO","ingPesos":640.0,"egPesos":null,"ingUSD":null,"egUSD":16.12},{"id":"init_284","fecha":"2026-03-18","desc":"Pago Transitos Gelisar","ingPesos":null,"egPesos":14400.0,"ingUSD":null,"egUSD":null},{"id":"init_285","fecha":"2026-03-19","desc":"Pago dev contenedores Gelisar C 2250 2251","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":378.0},{"id":"init_286","fecha":"2026-03-20","desc":"CAMBIO","ingPesos":3980.0,"egPesos":null,"ingUSD":null,"egUSD":100.0},{"id":"init_287","fecha":"2026-03-20","desc":"ingreso gelisar","ingPesos":null,"egPesos":null,"ingUSD":1448.0,"egUSD":null},{"id":"init_288","fecha":"2026-03-20","desc":"Pago saldo C 2215 DUA 51877","ingPesos":35915.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_289","fecha":"2026-03-20","desc":"Pago sueldo juan feb 26 2 de 2","ingPesos":null,"egPesos":27441.87,"ingUSD":null,"egUSD":null},{"id":"init_290","fecha":"2026-03-20","desc":"Pago pablo Gestor zff","ingPesos":null,"egPesos":3400.0,"ingUSD":null,"egUSD":null},{"id":"init_291","fecha":"2026-03-20","desc":"C.XXXX - PAGO DOCUMENTOS UPS- CONCREXUR - GUIA 1ZHV25256714718685","ingPesos":null,"egPesos":1890.0,"ingUSD":null,"egUSD":null},{"id":"init_292","fecha":"2026-03-20","desc":"comision giro en plaza","ingPesos":null,"egPesos":73.32,"ingUSD":null,"egUSD":null},{"id":"init_293","fecha":"2026-03-24","desc":"retiro nacho","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1000.0},{"id":"init_295","fecha":"2026-03-24","desc":"C.2249 - DUA 766334 - GELISAR - PAGO DUA","ingPesos":null,"egPesos":1200.0,"ingUSD":null,"egUSD":null},{"id":"init_296","fecha":"2026-03-24","desc":"C.2259 - DUA 060175 - CONCREXUR SA - DETALLE DE GASTOS.","ingPesos":238094.78,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_297","fecha":"2026-03-24","desc":"C. 2255 - DUA 056469 ALCON HONORARIOS + SALDO C. 2222","ingPesos":null,"egPesos":null,"ingUSD":454.5,"egUSD":null},{"id":"init_298","fecha":"2026-03-24","desc":"PAGO TCU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":29.0},{"id":"init_299","fecha":"2026-03-25","desc":"C.2259 - DUA 060175 - CONCREXUR - PAGO DUA","ingPesos":null,"egPesos":208997.0,"ingUSD":null,"egUSD":null},{"id":"init_300","fecha":"2026-03-27","desc":"C. 2261 - DUA 061796 - GUSTAVO MARTIN HONORARIOS","ingPesos":null,"egPesos":null,"ingUSD":477.0,"egUSD":null},{"id":"init_301","fecha":"2026-03-27","desc":"PAGO TCU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":63.0},{"id":"init_302","fecha":"2026-03-27","desc":"retiro rulo","ingPesos":null,"egPesos":8515.0,"ingUSD":null,"egUSD":null},{"id":"init_303","fecha":"2026-03-30","desc":"PAGO ADUANA GELISAR C.2250/51/56/57","ingPesos":null,"egPesos":4800.0,"ingUSD":null,"egUSD":null},{"id":"init_304","fecha":"2026-03-30","desc":"INGRESO RULO","ingPesos":8515.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_305","fecha":"2026-03-30","desc":"C.2256 - INVERSIA DAMM - pago dev vacio","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":205.0},{"id":"init_306","fecha":"2026-03-30","desc":"C. 2254+2264 - ALCON HONORARIOS","ingPesos":null,"egPesos":null,"ingUSD":1846.0,"egUSD":null},{"id":"init_307","fecha":"2026-03-30","desc":"C.2254+2264 - ALCON PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":846.0},{"id":"init_308","fecha":"2026-03-30","desc":"PAGO TCU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":21.0},{"id":"init_309","fecha":"2026-03-30","desc":"adau prov pesos TU EXPORTA","ingPesos":1868.92,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_310","fecha":"2026-03-30","desc":"cobro de intereses","ingPesos":null,"egPesos":null,"ingUSD":0.04,"egUSD":null},{"id":"init_311","fecha":"2026-03-31","desc":"pago de intereses","ingPesos":62.04,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_312","fecha":"2026-03-31","desc":"C.2260 - ANAMELIA - PAGO USD COSTOS DE MPORTACIN","ingPesos":null,"egPesos":null,"ingUSD":4928.0,"egUSD":null},{"id":"init_313","fecha":"2026-03-31","desc":"calcuclo de intereses vista","ingPesos":null,"egPesos":3.41,"ingUSD":null,"egUSD":null},{"id":"init_314","fecha":"2026-04-01","desc":"comex global agustin kunica","ingPesos":null,"egPesos":240.0,"ingUSD":null,"egUSD":null},{"id":"init_315","fecha":"2026-04-01","desc":"C.2260 - ANAMELIA - PAGO GASTOS LOCALES","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1366.44},{"id":"init_316","fecha":"2026-04-01","desc":"C. 2262 - ALCON HONORARIOS","ingPesos":null,"egPesos":null,"ingUSD":547.0,"egUSD":null},{"id":"init_317","fecha":"2026-04-01","desc":"C. 2262 - ALCON PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":120.0},{"id":"init_318","fecha":"2026-04-01","desc":"pago BSE pesos","ingPesos":null,"egPesos":1144.0,"ingUSD":null,"egUSD":null},{"id":"init_319","fecha":"2026-04-01","desc":"C.2204 - PAGO FLETE INTERNO","ingPesos":null,"egPesos":1750.0,"ingUSD":null,"egUSD":null},{"id":"init_320","fecha":"2026-04-01","desc":"PAGO MAIASIA DINAMA","ingPesos":null,"egPesos":null,"ingUSD":100.0,"egUSD":null},{"id":"init_321","fecha":"2026-04-01","desc":"C.2259 - PAGO FLETE INTERNO","ingPesos":null,"egPesos":2549.0,"ingUSD":null,"egUSD":null},{"id":"init_322","fecha":"2026-04-06","desc":"pago adau pesos","ingPesos":null,"egPesos":23114.39,"ingUSD":null,"egUSD":null},{"id":"init_323","fecha":"2026-04-06","desc":"pago adau dolares","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":307.8},{"id":"init_324","fecha":"2026-04-06","desc":"C.2208 - PAGO MONTECON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1488.0},{"id":"init_325","fecha":"2026-04-06","desc":"C.2208 - INGRESA EMILIO PAGO DE COSTOS IMPORTACION","ingPesos":null,"egPesos":null,"ingUSD":5735.0,"egUSD":null},{"id":"init_326","fecha":"2026-04-06","desc":"C. 2258 - CARRERAS ALF","ingPesos":126107.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_327","fecha":"2026-04-07","desc":"c 2208 alberdi 2258 carreras liq aduanas","ingPesos":null,"egPesos":539272.0,"ingUSD":null,"egUSD":null},{"id":"init_328","fecha":"2026-04-07","desc":"C.2208 / C.2258 - PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":438.0},{"id":"init_329","fecha":"2026-04-07","desc":"C.2208 - INGRESO EMILIO ALBERDI PAGO  COSTOS IMPORTACION","ingPesos":431679.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_330","fecha":"2026-04-08","desc":"C.2260 - PAGO DE ITEX Y DINAMA ANAMELIA","ingPesos":null,"egPesos":5000.0,"ingUSD":null,"egUSD":null},{"id":"init_331","fecha":"2026-04-08","desc":"cambio","ingPesos":202860.0,"egPesos":null,"ingUSD":null,"egUSD":5000.0},{"id":"init_332","fecha":"2026-04-08","desc":"1/2 2026 naral penta transaccion y sisimpex","ingPesos":null,"egPesos":10980.0,"ingUSD":null,"egUSD":null},{"id":"init_333","fecha":"2026-04-08","desc":"saldo sueldo marzo rulo","ingPesos":null,"egPesos":32912.0,"ingUSD":null,"egUSD":null},{"id":"init_334","fecha":"2026-04-08","desc":"liq parcial juan","ingPesos":null,"egPesos":27441.0,"ingUSD":null,"egUSD":null},{"id":"init_335","fecha":"2026-04-08","desc":"hono estudio mvc","ingPesos":null,"egPesos":30000.0,"ingUSD":null,"egUSD":null},{"id":"init_336","fecha":"2026-04-08","desc":"C.226 - DEV VACIO DEVOLUCION A INVERSIA","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":205.0},{"id":"init_337","fecha":"2026-04-08","desc":"REINTEGRO DEV VACIO INVERSIA","ingPesos":null,"egPesos":null,"ingUSD":410.0,"egUSD":null},{"id":"init_338","fecha":"2026-04-08","desc":"C.2260 - PAGO DUA ANAMELIA","ingPesos":403769.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_339","fecha":"2026-04-09","desc":"ingresa Alejandro Testa, gira por intermedio del estudio","ingPesos":22500.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_340","fecha":"2026-04-09","desc":"pago honorarios estudio mvc","ingPesos":null,"egPesos":22500.0,"ingUSD":null,"egUSD":null},{"id":"init_341","fecha":"2026-04-09","desc":"saldo sueldo marzo carla","ingPesos":null,"egPesos":55186.0,"ingUSD":null,"egUSD":null},{"id":"init_342","fecha":"2026-04-09","desc":"retiro nacho","ingPesos":null,"egPesos":100000.0,"ingUSD":null,"egUSD":null},{"id":"init_343","fecha":"2026-04-09","desc":"pago mega f. 29961","ingPesos":null,"egPesos":10947.0,"ingUSD":null,"egUSD":null},{"id":"init_344","fecha":"2026-04-09","desc":"pago alf logistica f. 6259 6197 6296","ingPesos":null,"egPesos":7930.0,"ingUSD":null,"egUSD":null},{"id":"init_345","fecha":"2026-04-09","desc":"curso mega6 2025 escuela adau","ingPesos":null,"egPesos":3200.0,"ingUSD":null,"egUSD":null},{"id":"init_346","fecha":"2026-04-09","desc":"comision scotia","ingPesos":null,"egPesos":72.6,"ingUSD":null,"egUSD":null},{"id":"init_347","fecha":"2026-04-10","desc":"C.2260 - PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1099.0},{"id":"init_348","fecha":"2026-04-10","desc":"C.2260 - PAGO TCP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1012.0},{"id":"init_349","fecha":"2026-04-10","desc":"C.2208 - PAGO DEV VACIO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":205.0},{"id":"init_350","fecha":"2026-04-10","desc":"CAMBIO","ingPesos":45000.0,"egPesos":null,"ingUSD":null,"egUSD":1146.2},{"id":"init_351","fecha":"2026-04-10","desc":"C.2260 - PAGO DUA ANAMELIA","ingPesos":null,"egPesos":397974.0,"ingUSD":null,"egUSD":null},{"id":"init_352","fecha":"2026-04-10","desc":"C.2265 - PAGO HONORARIOS Y GASTOS - INVERSIA","ingPesos":11465.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_353","fecha":"2026-04-14","desc":"C.2260 - DEV VACIO 2 CONTENEDORES","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":410.0},{"id":"init_354","fecha":"2026-04-15","desc":"cambio scotia","ingPesos":20000.0,"egPesos":null,"ingUSD":null,"egUSD":515.33},{"id":"init_355","fecha":"2026-04-15","desc":"pago BPS","ingPesos":null,"egPesos":20000.0,"ingUSD":null,"egUSD":null},{"id":"init_356","fecha":"2026-04-16","desc":"Pago Gestor ZFF Gelisar Rivera abril 2026","ingPesos":null,"egPesos":3395.0,"ingUSD":null,"egUSD":null},{"id":"init_357","fecha":"2026-04-16","desc":"C.2278 - TURNOTEC - COSTOS DE IMPORTACION - PESOS","ingPesos":150893.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_358","fecha":"2026-04-16","desc":"C.2278 - TURNOTEC - PAGO DUA","ingPesos":null,"egPesos":150399.0,"ingUSD":null,"egUSD":null},{"id":"init_359","fecha":"2026-04-16","desc":"C.2267 - NIDOX SAS - COSTOS DE IMPORTACION","ingPesos":379448.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_360","fecha":"2026-04-16","desc":"C.2278 - TURNOTEC - COSTOS DE IMPORTACION - USD","ingPesos":null,"egPesos":null,"ingUSD":1987.0,"egUSD":null},{"id":"init_361","fecha":"2026-04-17","desc":"pago BPS 10.25 patronales","ingPesos":null,"egPesos":21736.0,"ingUSD":null,"egUSD":null},{"id":"init_362","fecha":"2026-04-17","desc":"C.2278 - PAGO ANP","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":125.0},{"id":"init_363","fecha":"2026-04-17","desc":"C 2253 + 2263 HONORARIOS Y OTROS GASTOS ALCON","ingPesos":null,"egPesos":null,"ingUSD":1150.0,"egUSD":null},{"id":"init_364","fecha":"2026-04-17","desc":"C 2253 + 2263 HONORARIOS Y OTROS GASTOS ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":295.0},{"id":"init_365","fecha":"2026-04-17","desc":"GELISAR ADUANA RIVERA ABRIL 20262","ingPesos":null,"egPesos":3606.0,"ingUSD":null,"egUSD":null},{"id":"init_366","fecha":"2026-04-17","desc":"C. 2271 - ANP ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":66.0},{"id":"init_367","fecha":"2026-04-17","desc":"C. XXXXX GSU PAGO MONTECON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1178.0},{"id":"init_368","fecha":"2026-04-20","desc":"C.2181 - PAGO ANP - GSU","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1388.0},{"id":"init_369","fecha":"2026-04-20","desc":"FLEX 360 ABRIL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":671.0},{"id":"init_370","fecha":"2026-04-20","desc":"C.2181 - PAGO ITEX","ingPesos":null,"egPesos":10000.0,"ingUSD":null,"egUSD":null},{"id":"init_371","fecha":"2026-04-20","desc":"pago green informatica f. 6767 f.6907","ingPesos":null,"egPesos":8968.0,"ingUSD":null,"egUSD":null},{"id":"init_372","fecha":"2026-04-20","desc":"BOLETO DE PAGO IMESI ALCON C. 2268","ingPesos":null,"egPesos":26411.0,"ingUSD":null,"egUSD":null},{"id":"init_373","fecha":"2026-04-20","desc":"PAGO ANP ALCON C. 2268","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":550.0},{"id":"init_374","fecha":"2026-04-21","desc":"C.2280 C.2279 - FRITOPER Y DAMM INGRESO POR DEVOLUCION","ingPesos":null,"egPesos":null,"ingUSD":410.0,"egUSD":null},{"id":"init_375","fecha":"2026-04-21","desc":"C.2280 C.2279 - FRITOPER Y DAMM PAGO POR DEVOLUCION","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":410.0},{"id":"init_376","fecha":"2026-04-21","desc":"C.2181 - GSU IMPORT - IMPO 15 - PAGO DEV VACIO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":205.0},{"id":"init_377","fecha":"2026-04-20","desc":"C.2181 - GSU IMPORT - IMPO 15 - INGRESO COSTOS DE IMPO PARCIAL","ingPesos":null,"egPesos":null,"ingUSD":3012.0,"egUSD":null},{"id":"init_378","fecha":"2026-04-20","desc":"COMISION GIRO EN PLAZA","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.47},{"id":"init_379","fecha":"2026-04-21","desc":"IMESI ALCON C. 2268","ingPesos":26411.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_380","fecha":"2026-04-21","desc":"C. 2208 ALBERDI","ingPesos":null,"egPesos":null,"ingUSD":1283.0,"egUSD":null},{"id":"init_381","fecha":"2026-04-21","desc":"COSTO DEPOSITO CORRESPONSAL","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2.95},{"id":"init_382","fecha":"2026-04-17","desc":"C. 2268 C. 2271","ingPesos":null,"egPesos":null,"ingUSD":1635.0,"egUSD":null},{"id":"init_383","fecha":"2026-04-18","desc":"COBRO PERIODICO DE GARANTIAS","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":45.0},{"id":"init_384","fecha":"2026-04-22","desc":"C.2267 - NIDOX SAS - pago dua","ingPesos":null,"egPesos":307653.0,"ingUSD":null,"egUSD":null},{"id":"init_385","fecha":"2026-04-22","desc":"C.2267 - NIDOX SAS - PAGO IMESI","ingPesos":null,"egPesos":8141.0,"ingUSD":null,"egUSD":null},{"id":"init_386","fecha":"2026-04-22","desc":"cambio","ingPesos":30944.0,"egPesos":null,"ingUSD":null,"egUSD":800.0},{"id":"init_387","fecha":"2026-04-22","desc":"liq parcial juan","ingPesos":null,"egPesos":25000.0,"ingUSD":null,"egUSD":null},{"id":"init_388","fecha":"2026-04-23","desc":"Lorenzo Matto Yesica Lorena f. 7135","ingPesos":null,"egPesos":1300.0,"ingUSD":null,"egUSD":null},{"id":"init_389","fecha":"2026-04-23","desc":"precintos adau scotia cfe 433735 434021","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":495.9},{"id":"init_390","fecha":"2026-04-23","desc":"SUELDO RULO","ingPesos":null,"egPesos":10000.0,"ingUSD":null,"egUSD":null},{"id":"init_391","fecha":"2026-04-23","desc":"C.2208 - FLETE INTERNO EMILIO ALBERDI","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1183.0},{"id":"init_392","fecha":"2026-04-23","desc":"C.XXXX - PAGO GUIA AEREA NIDOX","ingPesos":null,"egPesos":1890.0,"ingUSD":null,"egUSD":null},{"id":"init_393","fecha":"2026-04-23","desc":"BPS patronales","ingPesos":null,"egPesos":7263.0,"ingUSD":null,"egUSD":null},{"id":"init_394","fecha":"2026-04-24","desc":"C. 2231 DOTI COMISION REFRISUD f. 2068","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":341.0},{"id":"init_395","fecha":"2026-04-23","desc":"c. 2275 - GUSTAVO MARTIN NUNEZ HONORARIOS Y OTROS GASTOS","ingPesos":null,"egPesos":null,"ingUSD":604.0,"egUSD":null},{"id":"init_396","fecha":"2026-04-24","desc":"C. 2272 - GELISAR DEVOLUCION VACIO GODILCO","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":190.0},{"id":"init_397","fecha":"2026-04-28","desc":"doti fact pendientes f. 1747 1758 1836 1951 2034 / recibo 306","ingPesos":null,"egPesos":9780.0,"ingUSD":null,"egUSD":null},{"id":"init_398","fecha":"2026-04-28","desc":"C.2281 - PAGO HONORARIOS ALCON","ingPesos":null,"egPesos":null,"ingUSD":1597.0,"egUSD":null},{"id":"init_399","fecha":"2026-04-28","desc":"C. 2281 - ANP ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1060.0},{"id":"init_400","fecha":"2026-04-28","desc":"saldo hono pendientes mvc","ingPesos":null,"egPesos":20622.0,"ingUSD":null,"egUSD":null},{"id":"init_401","fecha":"2026-04-30","desc":"C. 2268 RELIQ + TRANSITO GELISAR","ingPesos":null,"egPesos":6244.0,"ingUSD":null,"egUSD":null},{"id":"init_402","fecha":"2026-04-30","desc":"C.2278 - PAGO FLETE ALF LOGISTICA","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":1166.0},{"id":"init_403","fecha":"2026-05-03","desc":"retiro nacho","ingPesos":null,"egPesos":30000.0,"ingUSD":null,"egUSD":500.0},{"id":"init_404","fecha":"2026-05-04","desc":"pago inversia","ingPesos":13688.0,"egPesos":null,"ingUSD":null,"egUSD":null},{"id":"init_405","fecha":"2026-05-05","desc":"C.2181 - PAGO STAFISH","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":2850.0},{"id":"init_406","fecha":"2026-05-04","desc":"C.2181 - PAGO PARCIAL GSU","ingPesos":null,"egPesos":null,"ingUSD":3549.0,"egUSD":null},{"id":"init_407","fecha":"2026-05-04","desc":"Gelisar a cuenta","ingPesos":null,"egPesos":null,"ingUSD":3770.0,"egUSD":null},{"id":"init_408","fecha":"2026-05-05","desc":"2284 + 2287 PAGO ANP ALCON","ingPesos":null,"egPesos":null,"ingUSD":null,"egUSD":862.0},{"id":"init_409","fecha":"2026-05-05","desc":"2284+2287 HONORARIOS ALCON - CANAL ROJO","ingPesos":null,"egPesos":null,"ingUSD":2173.0,"egUSD":null}];
@@ -1027,6 +1160,18 @@ function computeSaldos() {
   return {saldoPesos:sP, saldoUSD:sU};
 }
 
+function computeSaldoAFecha(fecha) {
+  let sP=0, sU=0;
+  const sorted = [...movimientos]
+    .filter(m => m && m.fecha && m.fecha <= fecha)
+    .sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  sorted.forEach(m=>{
+    sP += (m.ingPesos||0) - Math.abs(m.egPesos||0);
+    sU += (m.ingUSD||0)   - Math.abs(m.egUSD||0);
+  });
+  return {saldoPesos:sP, saldoUSD:sU};
+}
+
 function computeWithSaldos(list) {
   const allSorted = [...movimientos].sort((a,b)=>a.fecha.localeCompare(b.fecha)||movimientos.indexOf(a)-movimientos.indexOf(b));
   let rP=0, rU=0;
@@ -1121,9 +1266,11 @@ function movRow(m, sP, sU) {
   </tr>`;
 }
 
-// ─── FILTRO MONEDA ────────────────────────────────────────────────────────────
+// ─── FILTRO MONEDA / TIPO ───────────────────────────────────────────────────────
 let panelMonFiltro = 'todos';
 let histMonFiltro  = 'todos';
+let panelTipoFiltro = 'todos';
+let histTipoFiltro  = 'todos';
 
 function setPanelMon(f) {
   panelMonFiltro = f;
@@ -1139,11 +1286,63 @@ function setHistMon(f) {
   document.querySelector(m[f]).className = 'mon-filter-btn ' + (f==='todos'?'active':f==='peso'?'active-peso':'active-usd');
   renderHistorial();
 }
+function setPanelTipo(f) {
+  panelTipoFiltro = f;
+  document.querySelectorAll('#pfTipoAll,#pfTipoIng,#pfTipoEg').forEach(b=>b.className='mon-filter-btn');
+  const m = {todos:'#pfTipoAll',ing:'#pfTipoIng',eg:'#pfTipoEg'};
+  document.querySelector(m[f]).className = 'mon-filter-btn ' + (f==='todos'?'active':f==='ing'?'active-ing':'active-eg');
+  renderPanel();
+}
+function setHistTipo(f) {
+  histTipoFiltro = f;
+  document.querySelectorAll('#hfTipoAll,#hfTipoIng,#hfTipoEg').forEach(b=>b.className='mon-filter-btn');
+  const m = {todos:'#hfTipoAll',ing:'#hfTipoIng',eg:'#hfTipoEg'};
+  document.querySelector(m[f]).className = 'mon-filter-btn ' + (f==='todos'?'active':f==='ing'?'active-ing':'active-eg');
+  renderHistorial();
+}
 
-function filterByMon(lista, filtro) {
-  if(filtro === 'peso') return lista.filter(m => m.ingPesos || m.egPesos);
-  if(filtro === 'usd')  return lista.filter(m => m.ingUSD  || m.egUSD);
-  return lista;
+// Devuelve las sub-filas (ing/eg x peso/usd) de un movimiento que matchean los filtros de moneda y tipo
+function buildRowsFiltered(m, monFiltro, tipoFiltro) {
+  let raw = [];
+  if(m.ingPesos){ raw.push({tipo:'ing',monto:m.ingPesos,mon:'peso'}); }
+  if(m.egPesos) { raw.push({tipo:'eg', monto:m.egPesos, mon:'peso'}); }
+  if(m.ingUSD)  { raw.push({tipo:'ing',monto:m.ingUSD, mon:'usd'}); }
+  if(m.egUSD)   { raw.push({tipo:'eg', monto:m.egUSD,  mon:'usd'}); }
+  const filtered = raw.filter(r =>
+    (monFiltro==='todos'  || r.mon===monFiltro) &&
+    (tipoFiltro==='todos' || r.tipo===tipoFiltro)
+  );
+  return {raw, filtered};
+}
+
+function filterByMon(lista, monFiltro, tipoFiltro) {
+  tipoFiltro = tipoFiltro || 'todos';
+  if(monFiltro==='todos' && tipoFiltro==='todos') return lista;
+  return lista.filter(m => buildRowsFiltered(m, monFiltro, tipoFiltro).filtered.length > 0);
+}
+
+// ─── SALDO A FECHA ────────────────────────────────────────────────────────────
+function openSaldoFecha() {
+  document.getElementById('saldoFechaModal').classList.add('show');
+  const f = document.getElementById('sfFecha');
+  if(!f.value) f.value = new Date().toISOString().slice(0,10);
+  consultarSaldoFecha();
+}
+function closeSaldoFecha() {
+  document.getElementById('saldoFechaModal').classList.remove('show');
+}
+function consultarSaldoFecha() {
+  const fecha = document.getElementById('sfFecha').value;
+  if(!fecha) return;
+  const {saldoPesos, saldoUSD} = computeSaldoAFecha(fecha);
+  const fmt = v => v.toLocaleString('es-UY',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const spEl = document.getElementById('sfSaldoPesos');
+  const suEl = document.getElementById('sfSaldoUSD');
+  spEl.textContent = `$ ${fmt(saldoPesos)}`;
+  spEl.className = 'sf-result-value ' + (saldoPesos<0?'neg':'pos');
+  suEl.textContent = `USD ${fmt(saldoUSD)}`;
+  suEl.className = 'sf-result-value ' + (saldoUSD<0?'neg':'pos');
+  document.getElementById('sfResult').classList.add('show');
 }
 
 // ─── EDITAR MOVIMIENTO ────────────────────────────────────────────────────────
@@ -1251,9 +1450,9 @@ function renderPanel() {
     });
   }
 
-  if(!hayFiltro && panelMonFiltro === 'todos') lista = lista.slice(0, 40);
-  else if(!hayFiltro) lista = filterByMon(lista, panelMonFiltro).slice(0, 40);
-  else lista = filterByMon(lista, panelMonFiltro);
+  if(!hayFiltro && panelMonFiltro === 'todos' && panelTipoFiltro === 'todos') lista = lista.slice(0, 40);
+  else if(!hayFiltro) lista = filterByMon(lista, panelMonFiltro, panelTipoFiltro).slice(0, 40);
+  else lista = filterByMon(lista, panelMonFiltro, panelTipoFiltro);
 
   const tbody = document.getElementById('panelTbody');
   if(!tbody) return;
@@ -1266,12 +1465,10 @@ function renderPanel() {
     try {
     const [,mm,dd] = (m.fecha||'2026-01-01').split('-');
     const dateStr = `${parseInt(dd)} ${months[parseInt(mm)-1]}`;
-    let rows = [];
-    if(m.ingPesos){ rows.push({tipo:'ing',monto:m.ingPesos,mon:'peso'}); }
-    if(m.egPesos) { rows.push({tipo:'eg', monto:m.egPesos, mon:'peso'}); }
-    if(m.ingUSD)  { rows.push({tipo:'ing',monto:m.ingUSD, mon:'usd'}); }
-    if(m.egUSD)   { rows.push({tipo:'eg', monto:m.egUSD,  mon:'usd'}); }
-    if(!rows.length) rows=[{tipo:'eg',monto:0,mon:'peso'}];
+    const {raw, filtered} = buildRowsFiltered(m, panelMonFiltro, panelTipoFiltro);
+    let rows = filtered;
+    if(!raw.length) rows=[{tipo:'eg',monto:0,mon:'peso'}];
+    if(!rows.length) return '';
     return rows.map((r,i)=>`<tr>
       <td class="td-fecha" style="${i>0?'color:#ccc':''}">${i===0?dateStr:'↳'}</td>
       <td class="td-dot"><span class="dot ${r.tipo}"></span></td>
@@ -1292,7 +1489,7 @@ function renderPanel() {
 function renderHistorial() {
   const mes = document.getElementById('histMes').value;
   const search = document.getElementById('histSearch').value.toLowerCase();
-  let filtered = filterByMon([...movimientos].sort((a,b)=>a.fecha.localeCompare(b.fecha)), histMonFiltro);
+  let filtered = filterByMon([...movimientos].sort((a,b)=>a.fecha.localeCompare(b.fecha)), histMonFiltro, histTipoFiltro);
   if(mes) filtered = filtered.filter(m=>m.fecha.startsWith(mes));
   if(search) filtered = filtered.filter(m=>m.desc.toLowerCase().includes(search));
 
@@ -1316,12 +1513,10 @@ function renderHistorial() {
     const [,mm,dd] = m.fecha.split('-');
     const dateStr = `${parseInt(dd)} ${months[parseInt(mm)-1]}`;
 
-    let rows = [];
-    if(m.ingPesos){ rows.push({tipo:'ing',monto:m.ingPesos,mon:'peso'}); }
-    if(m.egPesos) { rows.push({tipo:'eg', monto:m.egPesos, mon:'peso'}); }
-    if(m.ingUSD)  { rows.push({tipo:'ing',monto:m.ingUSD,  mon:'usd'}); }
-    if(m.egUSD)   { rows.push({tipo:'eg', monto:m.egUSD,   mon:'usd'}); }
-    if(!rows.length) rows=[{tipo:'eg',monto:0,mon:'peso'}];
+    const {raw, filtered} = buildRowsFiltered(m, histMonFiltro, histTipoFiltro);
+    let rows = filtered;
+    if(!raw.length) rows=[{tipo:'eg',monto:0,mon:'peso'}];
+    if(!rows.length) return;
 
     html += rows.map((r,i)=>`<tr>
       <td class="td-fecha" style="${i>0?'color:#ccc':''}">${i===0?dateStr:'↳'}</td>
@@ -2038,6 +2233,452 @@ function saveProveedor(){
   showStatus('✓ Acreedor guardado');
 }
 
+// ─── CONCILIACIÓN BANCARIA ──────────────────────────────────────────────────────
+let concEstado = null; // { moneda, ok:[], ambiguos:[], faltanEnCaja:[], faltanEnBanco:[] }
+let concUltimoBanco = null; // últimos movimientos de banco parseados, para poder re-conciliar cambiando el margen
+let concUltimaMoneda = null;
+
+function onConcFileChange(input) {
+  const file = input.files[0];
+  if(!file) return;
+  document.getElementById('concFileName').textContent = `📄 ${file.name}`;
+
+  // Auto-detectar moneda por el nombre del archivo, para evitar conciliar con el selector equivocado
+  const nombreLower = file.name.toLowerCase();
+  const selMoneda = document.getElementById('concMoneda');
+  if(/usd|dolar|d[oó]lares/.test(nombreLower)) selMoneda.value = 'usd';
+  else if(/peso|uyu/.test(nombreLower)) selMoneda.value = 'peso';
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'array', cellDates:false});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, raw:true, defval:null});
+      const movsBanco = parseExtractoBanco(rows);
+      if(!movsBanco.length){
+        showStatus('No se encontraron movimientos en el archivo', 'error');
+        return;
+      }
+      concUltimoBanco = movsBanco;
+      concUltimaMoneda = document.getElementById('concMoneda').value;
+      const margen = parseFloat(document.getElementById('concMargen').value) || 0;
+      const margenDias = parseInt(document.getElementById('concMargenDias').value) || 0;
+      concEstado = conciliar(movsBanco, concUltimaMoneda, margen, margenDias);
+      renderConciliacion();
+    } catch(err) {
+      console.error('Error leyendo extracto:', err);
+      showStatus('Error al leer el archivo: ' + err.message, 'error');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function reconciliarConMargen() {
+  if(!concUltimoBanco) return;
+  const margen = parseFloat(document.getElementById('concMargen').value) || 0;
+  const margenDias = parseInt(document.getElementById('concMargenDias').value) || 0;
+  const moneda = document.getElementById('concMoneda').value;
+  concUltimaMoneda = moneda;
+  concEstado = conciliar(concUltimoBanco, moneda, margen, margenDias);
+  renderConciliacion();
+}
+
+function diffDias(fechaA, fechaB) {
+  const a = new Date(fechaA+'T00:00:00');
+  const b = new Date(fechaB+'T00:00:00');
+  return Math.round(Math.abs(a-b) / 86400000);
+}
+
+// Busca un subconjunto (2 a maxItems) de "items" cuya suma de .monto se acerque a "objetivo" dentro de "margen"
+function buscarSubconjuntoSuma(items, objetivo, margen, maxItems=6) {
+  const arr = items.slice(0, 12); // tope para no explotar combinatoriamente
+  const total = arr.length;
+  let mejor = null;
+  for(let mask=1; mask<(1<<total); mask++){
+    let count=0, suma=0;
+    const combo=[];
+    for(let k=0;k<total;k++){
+      if(mask & (1<<k)){ count++; suma+=arr[k].item.monto; combo.push(arr[k]); }
+    }
+    if(count<2 || count>maxItems) continue;
+    const diff = Math.abs(suma-objetivo);
+    if(diff<=margen && (!mejor || diff<mejor.diff)) mejor = {combo, diff};
+  }
+  return mejor ? mejor.combo : null;
+}
+
+// Detecta casos "varios movimientos = 1 solo" en cualquiera de los dos sentidos (banco dividido, o caja dividido)
+function buscarAgrupados(faltanEnCaja, faltanEnBanco, margenMonto, margenDias) {
+  const agrupados = [];
+  const bancoUsado = new Array(faltanEnCaja.length).fill(false);
+  const cajaUsado = new Array(faltanEnBanco.length).fill(false);
+  const margenSuma = Math.max(margenMonto, 0.02);
+
+  // Caso 1: varios movimientos del BANCO suman 1 movimiento de CAJA MG
+  faltanEnBanco.forEach((c, ci) => {
+    if(cajaUsado[ci]) return;
+    const candidatos = faltanEnCaja
+      .map((b,bi)=>({item:b, idx:bi}))
+      .filter(({item,idx}) => !bancoUsado[idx] && item.tipo===c.tipo && diffDias(item.fecha,c.fecha)<=margenDias);
+    const combo = buscarSubconjuntoSuma(candidatos, c.monto, margenSuma);
+    if(combo){
+      combo.forEach(({idx})=>bancoUsado[idx]=true);
+      cajaUsado[ci]=true;
+      agrupados.push({sentido:'banco_a_caja', caja:c, partes: combo.map(x=>x.item)});
+    }
+  });
+
+  // Caso 2: 1 movimiento del BANCO corresponde a varios movimientos cargados en CAJA MG
+  faltanEnCaja.forEach((b, bi) => {
+    if(bancoUsado[bi]) return;
+    const candidatos = faltanEnBanco
+      .map((c,ci)=>({item:c, idx:ci}))
+      .filter(({item,idx}) => !cajaUsado[idx] && item.tipo===b.tipo && diffDias(item.fecha,b.fecha)<=margenDias);
+    const combo = buscarSubconjuntoSuma(candidatos, b.monto, margenSuma);
+    if(combo){
+      combo.forEach(({idx})=>cajaUsado[idx]=true);
+      bancoUsado[bi]=true;
+      agrupados.push({sentido:'caja_a_banco', banco:b, partes: combo.map(x=>x.item)});
+    }
+  });
+
+  const faltanEnCajaRestantes = faltanEnCaja.filter((b,bi)=>!bancoUsado[bi]);
+  const faltanEnBancoRestantes = faltanEnBanco.filter((c,ci)=>!cajaUsado[ci]);
+  return {agrupados, faltanEnCaja: faltanEnCajaRestantes, faltanEnBanco: faltanEnBancoRestantes};
+}
+
+// Busca la fila de encabezado (contiene "Fecha" y "Débito") y parsea las filas de datos
+function parseExtractoBanco(rows) {
+  let headerIdx = -1, colFecha=-1, colDesc=-1, colDebito=-1, colCredito=-1, colComp=-1;
+  for(let i=0;i<rows.length;i++){
+    const row = rows[i] || [];
+    const norm = row.map(c => (c==null?'':String(c)).toLowerCase().trim());
+    const iFecha = norm.findIndex(c=>c==='fecha');
+    const iDebito = norm.findIndex(c=>c.startsWith('d\u00e9bito')||c.startsWith('debito'));
+    const iCredito = norm.findIndex(c=>c.startsWith('cr\u00e9dito')||c.startsWith('credito'));
+    if(iFecha>=0 && iDebito>=0 && iCredito>=0){
+      headerIdx = i; colFecha=iFecha; colDebito=iDebito; colCredito=iCredito;
+      colDesc = norm.findIndex(c=>c.startsWith('descrip'));
+      colComp = norm.findIndex(c=>c.startsWith('comprobante'));
+      break;
+    }
+  }
+  if(headerIdx===-1) return [];
+  const out = [];
+  for(let i=headerIdx+1;i<rows.length;i++){
+    const row = rows[i] || [];
+    const fechaRaw = row[colFecha];
+    if(!fechaRaw) continue;
+    const fecha = parseFechaBanco(fechaRaw);
+    if(!fecha) continue;
+    const debito = parseFloat(row[colDebito]) || 0;
+    const credito = parseFloat(row[colCredito]) || 0;
+    if(!debito && !credito) continue;
+    out.push({
+      fecha,
+      desc: colDesc>=0 ? String(row[colDesc]||'').trim() : '',
+      comprobante: colComp>=0 ? String(row[colComp]||'').trim() : '',
+      tipo: credito>0 ? 'ing' : 'eg',
+      monto: Math.abs(credito>0 ? credito : debito)
+    });
+  }
+  return out;
+}
+
+function parseFechaBanco(v) {
+  if(typeof v === 'string'){
+    const m = v.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+    if(m) return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+    return null;
+  }
+  if(typeof v === 'number'){
+    // fecha serial de Excel
+    const d = new Date(Math.round((v-25569)*86400*1000));
+    return d.toISOString().slice(0,10);
+  }
+  return null;
+}
+
+// Detecta pares de movimientos en Caja MG que se compensan entre sí (mismo monto, tipos opuestos, fecha cercana)
+// Son "ficciones" contables (ej: alguien pagó de su bolsillo y se registra como ingreso+egreso) que nunca van a aparecer en el banco.
+function detectarInternos(faltanEnBanco, margenMonto, margenDias) {
+  const usados = new Array(faltanEnBanco.length).fill(false);
+  const internos = [];
+  for(let i=0;i<faltanEnBanco.length;i++){
+    if(usados[i]) continue;
+    const a = faltanEnBanco[i];
+    for(let j=i+1;j<faltanEnBanco.length;j++){
+      if(usados[j]) continue;
+      const b = faltanEnBanco[j];
+      if(a.tipo!==b.tipo && Math.abs(a.monto-b.monto)<=Math.max(margenMonto,0.01) && diffDias(a.fecha,b.fecha)<=margenDias){
+        usados[i]=true; usados[j]=true;
+        internos.push({par:[a,b]});
+        break;
+      }
+    }
+  }
+  const restantes = faltanEnBanco.filter((c,idx)=>!usados[idx]);
+  return {internos, restantes};
+}
+
+function conciliar(movsBanco, moneda, margen=0, margenDias=0) {
+  const campoIng = moneda==='peso' ? 'ingPesos' : 'ingUSD';
+  const campoEg  = moneda==='peso' ? 'egPesos'  : 'egUSD';
+  const fechas = movsBanco.map(m=>m.fecha).sort();
+  const fechaMin = fechas[0], fechaMax = fechas[fechas.length-1];
+
+  const cajaFlat = [];
+  movimientos.forEach(m=>{
+    if(m[campoIng]) cajaFlat.push({movId:m.id, fecha:m.fecha, tipo:'ing', monto:m[campoIng], desc:m.desc||'', usado:false});
+    if(m[campoEg])  cajaFlat.push({movId:m.id, fecha:m.fecha, tipo:'eg',  monto:Math.abs(m[campoEg]), desc:m.desc||'', usado:false});
+  });
+  // Rango de fechas a considerar, con margen extra a cada punta para no perder candidatos cercanos al borde del extracto
+  const cajaEnRango = cajaFlat.filter(c => diffDias(c.fecha, fechaMin) <= margenDias || (c.fecha>=fechaMin && c.fecha<=fechaMax) || diffDias(c.fecha, fechaMax) <= margenDias);
+
+  const ok=[], ambiguos=[], faltanEnCaja=[];
+  movsBanco.forEach(b=>{
+    const mismoTipo = cajaEnRango.filter(c => !c.usado && c.tipo===b.tipo);
+    const mismaFechaExacta = mismoTipo.filter(c => c.fecha===b.fecha);
+    const exactos = mismaFechaExacta.filter(c => Math.abs(c.monto-b.monto)<0.01);
+
+    if(exactos.length===1){
+      exactos[0].usado = true;
+      ok.push({banco:b, caja:exactos[0]});
+      return;
+    }
+    if(exactos.length>1){
+      ambiguos.push({banco:b, candidatos:exactos, motivo:'duplicado'});
+      return;
+    }
+    // sin match exacto en la fecha exacta: buscar dentro del margen de días y/o de monto
+    const cercanos = mismoTipo
+      .filter(c => diffDias(c.fecha,b.fecha) <= margenDias && Math.abs(c.monto-b.monto) <= margen)
+      .sort((x,y)=>{
+        const px = diffDias(x.fecha,b.fecha)*1000 + Math.abs(x.monto-b.monto);
+        const py = diffDias(y.fecha,b.fecha)*1000 + Math.abs(y.monto-b.monto);
+        return px-py;
+      });
+    if(cercanos.length){
+      const motivo = cercanos.some(c=>c.fecha!==b.fecha) ? 'diferencia_fecha' : 'diferencia';
+      ambiguos.push({banco:b, candidatos:cercanos, motivo});
+      return;
+    }
+    faltanEnCaja.push(b);
+  });
+
+  const faltanEnBanco = cajaEnRango.filter(c=>{
+    if(c.usado) return false;
+    if(c.fecha<fechaMin || c.fecha>fechaMax) return false; // no reportar como "faltante" algo fuera del período del extracto
+    const enAmbiguo = ambiguos.some(a => a.candidatos.includes(c));
+    return !enAmbiguo;
+  });
+
+  // Detectar casos de "varios movimientos = 1 solo" (depósitos o pagos partidos)
+  const agrup = buscarAgrupados(faltanEnCaja, faltanEnBanco, margen, margenDias);
+  // Detectar movimientos internos que se compensan entre sí (nunca van a aparecer en el banco)
+  const int = detectarInternos(agrup.faltanEnBanco, margen, margenDias);
+
+  return {moneda, fechaMin, fechaMax, ok, ambiguos, agrupados: agrup.agrupados, internos: int.internos, faltanEnCaja: agrup.faltanEnCaja, faltanEnBanco: int.restantes};
+}
+
+function renderConciliacion() {
+  document.getElementById('concEmpty').style.display='none';
+  document.getElementById('concResults').style.display='block';
+  const {moneda, ok, ambiguos, agrupados, internos, faltanEnCaja, faltanEnBanco} = concEstado;
+  const sym = moneda==='peso' ? '$' : 'U$S';
+  const fmt = v => v.toLocaleString('es-UY',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+  const totalBanco = ok.length + ambiguos.length + faltanEnCaja.length;
+  const sinNadaConciliado = totalBanco >= 5 && ok.length === 0 && ambiguos.length === 0 && agrupados.length === 0;
+  document.getElementById('concWarning').innerHTML = !sinNadaConciliado ? '' : `
+    <div class="conc-alert">⚠️ Ningún movimiento del extracto coincidió con Caja MG en <b>${sym==='$'?'Pesos':'Dólares'}</b>. Revisá que el extracto que subiste sea realmente de esa moneda/cuenta — es lo más probable si el número da 0.</div>`;
+
+  document.getElementById('concSummary').innerHTML = `
+    <div class="conc-stat ok"><div class="conc-stat-num">${ok.length}</div><div class="conc-stat-label">Conciliados</div></div>
+    <div class="conc-stat warn"><div class="conc-stat-num">${ambiguos.length}</div><div class="conc-stat-label">A revisar</div></div>
+    <div class="conc-stat warn"><div class="conc-stat-num">${agrupados.length}</div><div class="conc-stat-label">Pagos/depósitos partidos</div></div>
+    <div class="conc-stat ok"><div class="conc-stat-num">${internos.length}</div><div class="conc-stat-label">Internos compensados</div></div>
+    <div class="conc-stat err"><div class="conc-stat-num">${faltanEnCaja.length}</div><div class="conc-stat-label">Faltan en Caja MG</div></div>
+    <div class="conc-stat err"><div class="conc-stat-num">${faltanEnBanco.length}</div><div class="conc-stat-label">Sin extracto (Caja MG)</div></div>
+  `;
+
+  const rowBanco = (b) => `
+    <div class="conc-row">
+      <span class="conc-date">${fDate(b.fecha)}</span>
+      <span class="conc-desc" title="${b.desc}">${b.desc||'(sin descripción)'}</span>
+      <span class="conc-monto ${b.tipo}">${b.tipo==='ing'?'+':'−'} ${sym} ${fmt(b.monto)}</span>
+    </div>`;
+
+  document.getElementById('concAmbiguos').innerHTML = !ambiguos.length ? '' : `
+    <div class="conc-group">
+      <div class="conc-group-title">⚠️ A revisar — confirmá a mano cuál corresponde</div>
+      ${ambiguos.map((a,i)=>{
+        const notas = {
+          diferencia: `<span style="font-size:11px;color:#c99a2e;font-weight:600">diferencia de monto</span>`,
+          diferencia_fecha: `<span style="font-size:11px;color:#c99a2e;font-weight:600">diferencia de fecha${a.candidatos.some(c=>Math.abs(c.monto-a.banco.monto)>=0.01)?' y monto':''}</span>`,
+          duplicado: `<span style="font-size:11px;color:var(--text3)">mismo monto y fecha</span>`
+        };
+        const nota = notas[a.motivo] || '';
+        return `
+        <div class="conc-row ambig">
+          <span class="conc-date">${fDate(a.banco.fecha)}</span>
+          <span class="conc-desc" title="${a.banco.desc}">${a.banco.desc||'(sin descripción)'}</span>
+          <span class="conc-monto ${a.banco.tipo}">${a.banco.tipo==='ing'?'+':'−'} ${sym} ${fmt(a.banco.monto)}</span>
+          ${nota}
+          <select id="concAmbig${i}">
+            ${a.candidatos.map((c,j)=>{
+              const deltaMonto = c.monto - a.banco.monto;
+              const partes = [];
+              if(c.fecha !== a.banco.fecha) partes.push(`Caja MG: ${fDate(c.fecha)}`);
+              if(Math.abs(deltaMonto)>=0.01) partes.push(`dif. monto ${deltaMonto>=0?'+':''}${fmt(deltaMonto)}`);
+              const detalle = partes.length ? ` (${partes.join(', ')})` : '';
+              return `<option value="${j}">${c.desc||'(sin descripción)'}${detalle}</option>`;
+            }).join('')}
+            <option value="ninguno">— Ninguno coincide —</option>
+          </select>
+          <button onclick="resolverAmbiguo(${i})">Confirmar</button>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  document.getElementById('concAgrupados').innerHTML = !agrupados.length ? '' : `
+    <div class="conc-group">
+      <div class="conc-group-title">🧩 Pagos/depósitos partidos — confirmá que corresponden</div>
+      ${agrupados.map((g,i)=>{
+        const principal = g.sentido==='banco_a_caja' ? g.caja : g.banco;
+        const partes = g.partes;
+        const suma = partes.reduce((s,p)=>s+p.monto,0);
+        const origenPrincipal = g.sentido==='banco_a_caja' ? 'Caja MG (1 movimiento)' : 'Extracto bancario (1 movimiento)';
+        const origenPartes = g.sentido==='banco_a_caja' ? 'Extracto bancario' : 'Caja MG';
+        return `
+        <div class="conc-row ambig" style="flex-direction:column;align-items:stretch;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><b>${origenPrincipal}:</b> ${fDate(principal.fecha)} — ${principal.desc||'(sin descripción)'}</div>
+            <span class="conc-monto ${principal.tipo}">${principal.tipo==='ing'?'+':'−'} ${sym} ${fmt(principal.monto)}</span>
+          </div>
+          <div style="padding-left:16px;border-left:2px solid var(--border)">
+            <div style="font-size:11px;color:var(--text3);font-weight:600;margin-bottom:4px">${origenPartes} — suma ${sym} ${fmt(suma)}:</div>
+            ${partes.map(p=>`
+              <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0">
+                <span>${fDate(p.fecha)} — ${p.desc||'(sin descripción)'}</span>
+                <span>${sym} ${fmt(p.monto)}</span>
+              </div>`).join('')}
+          </div>
+          <div style="align-self:flex-end"><button onclick="confirmarAgrupado(${i})">Confirmar coincidencia</button></div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  document.getElementById('concInternos').innerHTML = !internos.length ? '' : `
+    <div class="conc-group">
+      <div class="conc-group-title">🔁 Movimientos internos compensados — no pasan por el banco, no requieren acción</div>
+      ${internos.map(g=>{
+        const [a,b] = g.par;
+        return `
+        <div class="conc-row" style="flex-direction:column;align-items:stretch;gap:4px;border-color:var(--border);background:var(--surface2)">
+          <div style="display:flex;justify-content:space-between">
+            <span>${fDate(a.fecha)} — ${a.desc||'(sin descripción)'}</span>
+            <span class="conc-monto ${a.tipo}">${a.tipo==='ing'?'+':'−'} ${sym} ${fmt(a.monto)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span>${fDate(b.fecha)} — ${b.desc||'(sin descripción)'}</span>
+            <span class="conc-monto ${b.tipo}">${b.tipo==='ing'?'+':'−'} ${sym} ${fmt(b.monto)}</span>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  document.getElementById('concFaltanEnCaja').innerHTML = !faltanEnCaja.length ? '' : `
+    <div class="conc-group">
+      <div class="conc-group-title">🏦 En el banco pero no en Caja MG — probablemente falta cargarlos</div>
+      ${faltanEnCaja.map((b,i)=>`
+        <div class="conc-row miss">
+          <span class="conc-date">${fDate(b.fecha)}</span>
+          <span class="conc-desc" title="${b.desc}">${b.desc||'(sin descripción)'}</span>
+          <span class="conc-monto ${b.tipo}">${b.tipo==='ing'?'+':'−'} ${sym} ${fmt(b.monto)}</span>
+          <button onclick="agregarACaja(${i})">+ Agregar a Caja MG</button>
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('concFaltanEnBanco').innerHTML = !faltanEnBanco.length ? '' : `
+    <div class="conc-group">
+      <div class="conc-group-title">📋 En Caja MG pero no en el extracto — revisar fecha/monto o si es de otra cuenta</div>
+      ${faltanEnBanco.map(c=>`
+        <div class="conc-row miss">
+          <span class="conc-date">${fDate(c.fecha)}</span>
+          <span class="conc-desc" title="${c.desc}">${c.desc||'(sin descripción)'}</span>
+          <span class="conc-monto ${c.tipo}">${c.tipo==='ing'?'+':'−'} ${sym} ${fmt(c.monto)}</span>
+        </div>`).join('')}
+    </div>`;
+
+  document.getElementById('concOk').innerHTML = !ok.length ? '' : `
+    <div class="conc-group">
+      <div class="conc-group-title">✅ Conciliados automáticamente</div>
+      ${ok.map(o=>rowBanco(o.banco)).join('')}
+    </div>`;
+}
+
+async function agregarACaja(i) {
+  const b = concEstado.faltanEnCaja[i];
+  if(!b) return;
+  const moneda = concEstado.moneda;
+  const nuevo = {
+    id: `m_${Date.now()}_${i}`,
+    fecha: b.fecha,
+    desc: b.desc || '(sin descripción)',
+    ingPesos: (moneda==='peso' && b.tipo==='ing') ? b.monto : null,
+    egPesos:  (moneda==='peso' && b.tipo==='eg')  ? b.monto : null,
+    ingUSD:   (moneda==='usd'  && b.tipo==='ing') ? b.monto : null,
+    egUSD:    (moneda==='usd'  && b.tipo==='eg')  ? b.monto : null,
+  };
+  movimientos.push(nuevo);
+  await saveMovimiento(nuevo);
+  concEstado.faltanEnCaja.splice(i,1);
+  concEstado.ok.push({banco:b, caja:{movId:nuevo.id, fecha:nuevo.fecha, tipo:b.tipo, monto:b.monto, desc:nuevo.desc, usado:true}});
+  renderConciliacion();
+  renderAll();
+  showStatus('✓ Movimiento agregado a Caja MG');
+}
+
+function confirmarAgrupado(i) {
+  const g = concEstado.agrupados[i];
+  if(!g) return;
+  if(g.sentido==='banco_a_caja'){
+    // varios movimientos del banco = 1 movimiento de Caja MG: contamos cada parte como conciliada contra el mismo registro de caja
+    g.partes.forEach(p => concEstado.ok.push({banco:p, caja:g.caja}));
+  } else {
+    // 1 movimiento del banco = varios movimientos de Caja MG: se cuenta una vez, referenciando el primer registro de caja
+    concEstado.ok.push({banco:g.banco, caja:g.partes[0]});
+  }
+  concEstado.agrupados.splice(i,1);
+  renderConciliacion();
+}
+
+function resolverAmbiguo(i) {
+  const a = concEstado.ambiguos[i];
+  const selVal = document.getElementById(`concAmbig${i}`).value;
+
+  if(selVal === 'ninguno'){
+    // Ninguno de los candidatos corresponde: el movimiento del banco queda como "falta en Caja MG"
+    // y todos los candidatos vuelven a estar disponibles como "sin extracto"
+    concEstado.faltanEnCaja.push(a.banco);
+    concEstado.faltanEnBanco = concEstado.faltanEnBanco.concat(a.candidatos);
+    concEstado.ambiguos.splice(i,1);
+    renderConciliacion();
+    return;
+  }
+
+  const sel = parseInt(selVal);
+  const elegido = a.candidatos[sel];
+  elegido.usado = true;
+  concEstado.ok.push({banco:a.banco, caja:elegido});
+  const otros = a.candidatos.filter((c,j)=>j!==sel);
+  concEstado.faltanEnBanco = concEstado.faltanEnBanco.concat(otros);
+  concEstado.ambiguos.splice(i,1);
+  renderConciliacion();
+}
+
 function askDeleteProv(id){
   const p = proveedores.find(x=>x.id===id);
   if(!p) return;
@@ -2063,7 +2704,7 @@ function showTab2(t) {
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.sidebar-nav-btn').forEach((el,i)=>{
     el.classList.remove('active');
-    if((i===0&&t==='panel')||(i===1&&t==='historial')||(i===2&&t==='pendientes')||(i===3&&t==='cuentas'))el.classList.add('active');
+    if((i===0&&t==='panel')||(i===1&&t==='historial')||(i===2&&t==='pendientes')||(i===3&&t==='cuentas')||(i===4&&t==='conciliacion'))el.classList.add('active');
   });
   document.getElementById(`tab-${t}`).classList.add('active');
   if(t==='historial') renderHistorial();
@@ -2095,9 +2736,8 @@ updateClock();
 setInterval(updateClock,60000);
 
 // ─── CLOSE MODALS ON OVERLAY ──────────────────────────────────────────────────
-document.getElementById('nmModal').addEventListener('click',e=>{if(e.target.id==='nmModal')closeNuevoMov();});
+// Nota: nmModal y provModal ya NO se cierran al hacer click afuera, para no perder datos cargados a mitad de completar el formulario. Se cierran solo con la ✕ o el botón Cancelar.
 document.getElementById('delModal').addEventListener('click',e=>{if(e.target.id==='delModal')closeDelModal();});
-document.getElementById('provModal').addEventListener('click',e=>{if(e.target.id==='provModal')closeProvModal();});
 
 // ─── BOOT ─────────────────────────────────────────────────────────────────────
 loadData();
