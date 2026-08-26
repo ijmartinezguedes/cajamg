@@ -1650,14 +1650,18 @@ async function sincronizarMailPendientes() {
     }
     await loadPendientes();
     renderPendientes();
-    const creados = (data.resultados||[]).filter(r=>r.creado).length;
-    const total = data.procesados ?? (data.resultados||[]).length;
-    showStatus(
-      total === 0
-        ? '📭 No hay facturas nuevas en el mail'
-        : `✅ Revisé ${total} adjunto${total!==1?'s':''} — se cargaron ${creados} pendiente${creados!==1?'s':''}. Revisalos con ✏️ si algo quedó mal.`,
-      'ok'
-    );
+    if(data.primeraVez) {
+      showStatus('🔧 Primera sincronización: se marcó el punto de partida. Los próximos mails nuevos con factura sí se van a cargar acá.', 'ok');
+    } else {
+      const creados = (data.resultados||[]).filter(r=>r.creado).length;
+      const total = data.procesados ?? (data.resultados||[]).length;
+      showStatus(
+        total === 0
+          ? '📭 No hay facturas nuevas en el mail'
+          : `✅ Revisé ${total} adjunto${total!==1?'s':''} — se cargaron ${creados} pendiente${creados!==1?'s':''}. Revisalos con ✏️ si algo quedó mal.`,
+        'ok'
+      );
+    }
   } catch(err) {
     console.error('Error sincronizando mail:', err);
     showStatus(`❌ No se pudo sincronizar el mail — ${err.message}`, 'error');
