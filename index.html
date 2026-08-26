@@ -698,7 +698,10 @@ body{display:flex;min-height:100vh}
   <div class="section">
     <div class="section-header">
       <span class="section-title">⏰ Pagos Pendientes</span>
-      <button class="btn btn-add" onclick="openNuevoPend()">+ Agregar pendiente</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-add" id="btnSyncMail" style="background:var(--teal);color:#fff;border-color:var(--teal-dark)" onclick="sincronizarMailPendientes()">📧 <span id="btnSyncMailTxt">Sincronizar mail</span></button>
+        <button class="btn btn-add" onclick="openNuevoPend()">+ Agregar pendiente</button>
+      </div>
     </div>
     <div class="section-body">
       <div class="pend-toolbar">
@@ -801,8 +804,8 @@ body{display:flex;min-height:100vh}
     <div class="np-modal-inner">
       <button class="np-close" onclick="closeNuevoPend()">✕</button>
       <div class="np-header">
-        <div class="np-title">Nuevo pendiente</div>
-        <div class="np-sub">Registrá un pago pendiente</div>
+        <div class="np-title" id="npModalTitle">Nuevo pendiente</div>
+        <div class="np-sub" id="npModalSub">Registrá un pago pendiente</div>
       </div>
       <div class="np-body">
         <div class="np-field">
@@ -838,7 +841,7 @@ body{display:flex;min-height:100vh}
           <span id="btnIAText">✨ Analizar con IA <span class="ia-badge">BETA</span></span>
           <span id="btnIASpinner" class="btn-ia-spinner" style="display:none"></span>
         </button>
-        <button class="np-submit" onclick="submitNuevoPend()">Guardar pendiente</button>
+        <button class="np-submit" id="npSubmitBtn" onclick="submitNuevoPend()">Guardar pendiente</button>
       </div>
     </div>
   </div>
@@ -1627,6 +1630,43 @@ async function savePendientes() {
   // No se usa directamente — cada operación llama a su función específica
 }
 
+async function sincronizarMailPendientes() {
+  const btn = document.getElementById('btnSyncMail');
+  const txt = document.getElementById('btnSyncMailTxt');
+  btn.disabled = true;
+  txt.textContent = 'Sincronizando...';
+  try {
+    const resp = await fetch(`${SB_URL}/functions/v1/sync-pendientes-email`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    const data = await resp.json();
+    if(!resp.ok || data.ok === false) {
+      throw new Error(data.error || `HTTP ${resp.status}`);
+    }
+    await loadPendientes();
+    renderPendientes();
+    const creados = (data.resultados||[]).filter(r=>r.creado).length;
+    const total = data.procesados ?? (data.resultados||[]).length;
+    showStatus(
+      total === 0
+        ? '📭 No hay facturas nuevas en el mail'
+        : `✅ Revisé ${total} adjunto${total!==1?'s':''} — se cargaron ${creados} pendiente${creados!==1?'s':''}. Revisalos con ✏️ si algo quedó mal.`,
+      'ok'
+    );
+  } catch(err) {
+    console.error('Error sincronizando mail:', err);
+    showStatus(`❌ No se pudo sincronizar el mail — ${err.message}`, 'error');
+  } finally {
+    btn.disabled = false;
+    txt.textContent = 'Sincronizar mail';
+  }
+}
+
 function setPendFiltro(f) {
   pendFiltroActual = f;
   ['pfTodos','pfPend','pfPagados'].forEach(id=>document.getElementById(id).classList.remove('active'));
@@ -1725,6 +1765,7 @@ function renderPendientes() {
         ${adjuntoHtml}
         <div class="pend-footer-actions">
           ${accionBtn}
+          <button class="btn-del" onclick="editarPend('${p.id}')" title="Editar" style="color:var(--accent, #6BB8CC)">✏️</button>
           <button class="btn-del" onclick="eliminarPend('${p.id}')" title="Eliminar">✕</button>
         </div>
       </div>
@@ -1804,7 +1845,10 @@ function openImgViewer(id) {
 }
 function closeImgViewer(){ document.getElementById('imgViewer').classList.remove('show'); }
 
+let pendEditId = null;
+
 function openNuevoPend() {
+  pendEditId = null;
   npFileData = null;
   document.getElementById('npAcreedor').value = '';
   document.getElementById('npMonto').value = '';
@@ -1814,10 +1858,41 @@ function openNuevoPend() {
   document.getElementById('npFile').value = '';
   document.getElementById('btnAnalizarIA').style.display = 'none';
   document.getElementById('btnIAText').innerHTML = '✨ Analizar con IA <span class="ia-badge">BETA</span>';
+  document.getElementById('npModalTitle').textContent = 'Nuevo pendiente';
+  document.getElementById('npModalSub').textContent = 'Registrá un pago pendiente';
+  document.getElementById('npSubmitBtn').textContent = 'Guardar pendiente';
   document.getElementById('npModal').classList.add('show');
   setTimeout(()=>document.getElementById('npAcreedor').focus(), 100);
 }
-function closeNuevoPend(){ document.getElementById('npModal').classList.remove('show'); }
+
+function editarPend(id) {
+  const p = pendientes.find(x=>x.id===id);
+  if(!p) return;
+  pendEditId = id;
+  npFileData = p.archivo || null;
+  document.getElementById('npAcreedor').value = p.acreedor || '';
+  document.getElementById('npMonto').value = p.monto ?? '';
+  document.getElementById('npMoneda').value = p.moneda || 'peso';
+  document.getElementById('npVto').value = p.vto || '';
+  document.getElementById('npFile').value = '';
+  if(p.archivo) {
+    const el = document.getElementById('npFileName');
+    el.textContent = `📎 ${p.archivo.name}`;
+    el.style.display = 'block';
+    document.getElementById('btnAnalizarIA').style.display = 'flex';
+  } else {
+    document.getElementById('npFileName').style.display = 'none';
+    document.getElementById('btnAnalizarIA').style.display = 'none';
+  }
+  document.getElementById('btnIAText').innerHTML = '✨ Analizar con IA <span class="ia-badge">BETA</span>';
+  document.getElementById('npModalTitle').textContent = 'Editar pendiente';
+  document.getElementById('npModalSub').textContent = 'Corregí los datos y guardá los cambios';
+  document.getElementById('npSubmitBtn').textContent = 'Guardar cambios';
+  document.getElementById('npModal').classList.add('show');
+  setTimeout(()=>document.getElementById('npAcreedor').focus(), 100);
+}
+
+function closeNuevoPend(){ document.getElementById('npModal').classList.remove('show'); pendEditId = null; }
 
 function onNpFileChange(input) {
   const file = input.files[0];
@@ -1925,6 +2000,32 @@ async function submitNuevoPend() {
   const monto = parseFloat(document.getElementById('npMonto').value);
   if(!acreedor) { showStatus('Ingresá el acreedor', 'error'); return; }
   if(!monto || monto <= 0) { showStatus('Ingresá un monto válido', 'error'); return; }
+
+  if(pendEditId) {
+    // ─── Modo edición: actualizar pendiente existente ───
+    const idx = pendientes.findIndex(x=>x.id===pendEditId);
+    if(idx === -1) { showStatus('No se encontró el pendiente a editar', 'error'); return; }
+    const moneda = document.getElementById('npMoneda').value;
+    const vto = document.getElementById('npVto').value || null;
+    const updated = {
+      ...pendientes[idx],
+      acreedor, moneda, monto, vto,
+      archivo: npFileData,
+    };
+    const sbRow = {
+      acreedor, moneda, monto, vto,
+      archivo_name: npFileData?.name || null,
+      archivo_type: npFileData?.type || null,
+      archivo_data: npFileData?.data || null,
+    };
+    await sb.update('pendientes', pendEditId, sbRow).catch(e=>console.error(e));
+    pendientes[idx] = updated;
+    closeNuevoPend();
+    renderPendientes();
+    showStatus('✓ Pendiente actualizado');
+    return;
+  }
+
   const p = {
     id: `pend_${Date.now()}`,
     acreedor,
