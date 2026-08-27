@@ -1655,10 +1655,11 @@ async function sincronizarMailPendientes() {
     } else {
       const creados = (data.resultados||[]).filter(r=>r.creado).length;
       const total = data.procesados ?? (data.resultados||[]).length;
+      const sufijo = data.quedaronPendientes ? ' — quedan más por revisar, tocá el botón de nuevo para seguir.' : '';
       showStatus(
         total === 0
-          ? '📭 No hay facturas nuevas en el mail'
-          : `✅ Revisé ${total} adjunto${total!==1?'s':''} — se cargaron ${creados} pendiente${creados!==1?'s':''}. Revisalos con ✏️ si algo quedó mal.`,
+          ? `📭 No hay facturas nuevas en el mail${sufijo}`
+          : `✅ Revisé ${total} adjunto${total!==1?'s':''} — se cargaron ${creados} pendiente${creados!==1?'s':''}.${sufijo}`,
         'ok'
       );
     }
