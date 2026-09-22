@@ -1,9 +1,18 @@
 // scripts/sync-pendientes-email.mjs
 // Corre en GitHub Actions (sin límite de 150s como Supabase Edge Functions).
-// Lee mails nuevos del buzón IMAP, detecta adjuntos PDF/imagen sin bajar el
-// mail completo, los analiza con la IA de Anthropic, y crea pendientes en
-// Supabase. Usa el mismo marcador de UID que antes (tabla email_sync_state),
-// así que es compatible con lo que ya está corrido.
+//
+// Diseño en dos fases:
+//  FASE 1: una sola conexión IMAP hace un barrido liviano (solo metadata:
+//          envelope + bodyStructure) de todos los mails nuevos, para
+//          encontrar cuáles tienen adjuntos PDF/imagen candidatos a factura.
+//          Esto ya probamos que es rápido y confiable con este servidor.
+//  FASE 2: para cada mail candidato, se abre una conexión IMAP NUEVA y se
+//          baja el mail completo (fetch con source:true + mailparser) —
+//          el servidor de este hosting no soporta pedir partes sueltas de
+//          un mail (bodyParts / download), así que hay que bajarlo entero.
+//          Si un mail puntual se cuelga o falla, se lo salta y se sigue con
+//          el resto usando una conexión limpia — un mail con problemas
+//          nunca frena a los demás.
 
 import { ImapFlow } from "imapflow";
 import { simpleParser } from "mailparser";
@@ -16,9 +25,9 @@ const IMAP_PORT = Number(process.env.IMAP_PORT || "993");
 const IMAP_USER = process.env.IMAP_USER;
 const IMAP_PASSWORD = process.env.IMAP_PASSWORD;
 
-const MAX_ADJUNTO_BYTES = 15 * 1024 * 1024; // acá sí podemos ser generosos, no hay apuro de tiempo
-const MIN_IMAGEN_BYTES = 15 * 1024; // imágenes menores a esto casi siempre son logos de firma, no facturas
-const TIMEOUT_DESCARGA_MS = 20000; // si bajar un adjunto puntual se cuelga, lo salteamos
+const MAX_ADJUNTO_BYTES = 15 * 1024 * 1024;
+const MIN_IMAGEN_BYTES = 15 * 1024; // imágenes menores a esto casi siempre son logos de firma
+const TIMEOUT_DESCARGA_MS = 25000; // por mail individual en la Fase 2
 
 for (const [k, v] of Object.entries({ SB_URL, SB_KEY, ANTHROPIC_KEY, IMAP_HOST, IMAP_USER, IMAP_PASSWORD })) {
   if (!v) {
@@ -76,10 +85,10 @@ function encontrarAdjuntos(node, acc = []) {
   return acc;
 }
 
-async function streamToBase64(stream) {
-  const chunks = [];
-  for await (const chunk of stream) chunks.push(chunk);
-  return Buffer.concat(chunks).toString("base64");
+function esCandidatoValido(meta) {
+  if (meta.size > MAX_ADJUNTO_BYTES) return false;
+  if (meta.mime.startsWith("image/") && meta.size < MIN_IMAGEN_BYTES) return false;
+  return true;
 }
 
 function conTimeout(promesa, ms, etiqueta) {
@@ -89,6 +98,18 @@ function conTimeout(promesa, ms, etiqueta) {
       setTimeout(() => reject(new Error(`Timeout (${ms / 1000}s) en: ${etiqueta}`)), ms)
     ),
   ]);
+}
+
+async function conectar() {
+  const client = new ImapFlow({
+    host: IMAP_HOST,
+    port: IMAP_PORT,
+    secure: true,
+    auth: { user: IMAP_USER, pass: IMAP_PASSWORD },
+    logger: false,
+  });
+  await client.connect();
+  return client;
 }
 
 async function analizarConIA(base64, mediaType) {
@@ -149,141 +170,138 @@ async function crearPendiente(row) {
 }
 
 async function main() {
+  const lastUid = await getLastUid();
+
+  // ── FASE 1: barrido liviano con una sola conexión ──────────────────────
   console.log(`Conectando a ${IMAP_HOST}:${IMAP_PORT} como ${IMAP_USER}...`);
-  const client = new ImapFlow({
-    host: IMAP_HOST,
-    port: IMAP_PORT,
-    secure: true,
-    auth: { user: IMAP_USER, pass: IMAP_PASSWORD },
-    logger: false,
-  });
+  const client1 = await conectar();
+  console.log("Conectado. Iniciando Fase 1 (barrido de metadata)...");
 
-  await client.connect();
-  console.log("Conectado.");
-
-  const lock = await client.getMailboxLock("INBOX");
-  let creados = 0;
-  let procesados = 0;
+  let maxUidActual;
+  const candidatosGlobal = [];
+  let mensajesRevisados = 0;
 
   try {
-    const status = await client.status("INBOX", { uidNext: true });
-    const maxUidActual = (status.uidNext || 1) - 1;
-    const lastUid = await getLastUid();
+    const lock = await client1.getMailboxLock("INBOX");
+    try {
+      const status = await client1.status("INBOX", { uidNext: true });
+      maxUidActual = (status.uidNext || 1) - 1;
 
-    if (lastUid === 0) {
-      await setLastUid(maxUidActual);
-      console.log("Primera sincronización: se estableció el punto de partida, no se procesó historial.");
-      return;
-    }
+      if (lastUid === 0) {
+        await setLastUid(maxUidActual);
+        console.log("Primera sincronización: se estableció el punto de partida, no se procesó historial.");
+        return;
+      }
+      if (maxUidActual <= lastUid) {
+        console.log("No hay mails nuevos.");
+        return;
+      }
 
-    if (maxUidActual <= lastUid) {
-      console.log("No hay mails nuevos.");
-      return;
-    }
+      console.log(`Procesando UIDs ${lastUid + 1} a ${maxUidActual} (${maxUidActual - lastUid} mails)...`);
 
-    console.log(`Procesando UIDs ${lastUid + 1} a ${maxUidActual} (${maxUidActual - lastUid} mails)...`);
-
-    let contador = 0;
-    let conexionRota = false;
-    for await (const msg of client.fetch(`${lastUid + 1}:${maxUidActual}`, { uid: true, envelope: true, bodyStructure: true }, { uid: true })) {
-      if (conexionRota) break;
-      contador++;
-      const fromAddr = msg.envelope?.from?.[0]?.address || "desconocido";
-      const asunto = msg.envelope?.subject || "(sin asunto)";
-      const candidatos = encontrarAdjuntos(msg.bodyStructure).filter((meta) => {
-        if (meta.size > MAX_ADJUNTO_BYTES) return false;
-        if (meta.mime.startsWith("image/") && meta.size < MIN_IMAGEN_BYTES) return false;
-        return true;
-      });
-
-      if (candidatos.length > 0) {
-        console.log(`[${contador}] UID ${msg.uid} — "${asunto}" de ${fromAddr} — ${candidatos.length} adjunto(s) candidato(s)`);
-        try {
-          console.log(`  → bajando el mail completo (el servidor no soporta pedir partes sueltas)...`);
-          const fetched = await conTimeout(
-            client.fetchOne(msg.uid, { uid: true, source: true }, { uid: true }),
-            TIMEOUT_DESCARGA_MS,
-            `descarga completa del mail`
-          );
-          if (!fetched || !fetched.source) throw new Error("No se obtuvo el mail completo");
-          const parsed = await simpleParser(fetched.source);
-          console.log(`  → mail parseado, ${parsed.attachments?.length || 0} adjuntos reales encontrados`);
-
-          for (const meta of candidatos) {
-            const att = (parsed.attachments || []).find((a) => (a.filename || "") === meta.filename);
-            if (!att) {
-              console.log(`  ⚠️  No encontré "${meta.filename}" al parsear el mail — se salta`);
-              continue;
-            }
-            procesados++;
-            try {
-              const base64 = att.content.toString("base64");
-              console.log(`  → base64 listo para "${meta.filename}" (${base64.length} chars), llamando a la IA...`);
-              const analysis = await analizarConIA(base64, meta.mime);
-              console.log(`  → respuesta de la IA:`, JSON.stringify(analysis));
-
-              if (analysis?.acreedor && analysis?.monto) {
-                const ok = await crearPendiente({
-                  id: `pend_mail_${msg.uid}_${meta.part}_${Date.now()}`,
-                  acreedor: analysis.acreedor,
-                  moneda: analysis.moneda === "usd" ? "usd" : "peso",
-                  monto: analysis.monto,
-                  vto: analysis.vencimiento || null,
-                  pagado: false,
-                  cargado_por: "Automático (mail)",
-                  origen: "email",
-                  remitente: fromAddr,
-                  archivo_name: meta.filename,
-                  archivo_type: meta.mime,
-                  archivo_data: `data:${meta.mime};base64,${base64}`,
-                });
-                if (ok) {
-                  creados++;
-                  console.log(`  ✅ Pendiente creado: ${analysis.acreedor} — ${analysis.monto} (confianza: ${analysis.confianza})`);
-                } else {
-                  console.log(`  ❌ No se pudo guardar en Supabase`);
-                }
-              } else {
-                console.log(`  ⚠️  La IA no pudo extraer los datos de "${meta.filename}"`);
-              }
-            } catch (err) {
-              console.error(`  ❌ Error analizando "${meta.filename}":`, err.message || err);
-            }
-          }
-        } catch (err) {
-          console.error(`  ❌ Error bajando el mail completo:`, err.message || err);
-          if (String(err.message || "").startsWith("Timeout")) {
-            conexionRota = true;
-            console.log(`  🛑 Se corta la corrida acá — la conexión puede haber quedado inestable. Lo que ya se guardó queda a salvo; la próxima corrida sigue desde el mail anterior a este.`);
-          }
+      for await (const msg of client1.fetch(`${lastUid + 1}:${maxUidActual}`, { uid: true, envelope: true, bodyStructure: true }, { uid: true })) {
+        mensajesRevisados++;
+        const candidatos = encontrarAdjuntos(msg.bodyStructure).filter(esCandidatoValido);
+        if (candidatos.length > 0) {
+          const fromAddr = msg.envelope?.from?.[0]?.address || "desconocido";
+          const asunto = msg.envelope?.subject || "(sin asunto)";
+          candidatosGlobal.push({ uid: msg.uid, asunto, fromAddr, candidatos });
+          console.log(`  · UID ${msg.uid} — "${asunto}" de ${fromAddr} — ${candidatos.length} adjunto(s) candidato(s)`);
         }
       }
-
-      // Guardamos progreso solo si este mail se terminó de revisar entero —
-      // así, si se corta a mitad de camino, la próxima corrida retoma este
-      // mismo mail desde cero en vez de saltearlo.
-      if (!conexionRota) {
-        await setLastUid(msg.uid);
-      }
+    } finally {
+      try { lock.release(); } catch { /* noop */ }
     }
-
-    if (!conexionRota) {
-      await setLastUid(maxUidActual);
-    }
-    console.log(`\nListo. Mails revisados: ${contador}. Adjuntos procesados: ${procesados}. Pendientes creados: ${creados}.${conexionRota ? " (corrida interrumpida por timeout — la próxima corrida sigue desde acá)" : ""}`);
   } finally {
-    try { lock.release(); } catch { /* la conexión puede ya estar rota, no importa */ }
-    try { await client.logout(); } catch { /* idem */ }
+    try { await client1.logout(); } catch { /* noop */ }
   }
+
+  console.log(`Fase 1 completa: ${mensajesRevisados} mails revisados, ${candidatosGlobal.length} con adjuntos candidatos.\n`);
+
+  // ── FASE 2: un mail a la vez, conexión nueva para cada uno ─────────────
+  let procesados = 0;
+  let creados = 0;
+  let mailsConError = 0;
+
+  for (const cand of candidatosGlobal) {
+    console.log(`Procesando UID ${cand.uid} — "${cand.asunto}" de ${cand.fromAddr}`);
+    let client2 = null;
+    try {
+      client2 = await conectar();
+      const lock2 = await client2.getMailboxLock("INBOX");
+      try {
+        const fetched = await conTimeout(
+          client2.fetchOne(cand.uid, { uid: true, source: true }, { uid: true }),
+          TIMEOUT_DESCARGA_MS,
+          "descarga completa del mail"
+        );
+        if (!fetched || !fetched.source) throw new Error("No se obtuvo el mail completo");
+
+        const parsed = await simpleParser(fetched.source);
+
+        for (const meta of cand.candidatos) {
+          const att = (parsed.attachments || []).find((a) => (a.filename || "") === meta.filename);
+          if (!att) {
+            console.log(`  ⚠️  No encontré "${meta.filename}" al parsear el mail — se salta`);
+            continue;
+          }
+          procesados++;
+          const base64 = att.content.toString("base64");
+          const analysis = await analizarConIA(base64, meta.mime);
+
+          if (analysis?.acreedor && analysis?.monto) {
+            const ok = await crearPendiente({
+              id: `pend_mail_${cand.uid}_${meta.part}_${Date.now()}`,
+              acreedor: analysis.acreedor,
+              moneda: analysis.moneda === "usd" ? "usd" : "peso",
+              monto: analysis.monto,
+              vto: analysis.vencimiento || null,
+              pagado: false,
+              cargado_por: "Automático (mail)",
+              origen: "email",
+              remitente: cand.fromAddr,
+              archivo_name: meta.filename,
+              archivo_type: meta.mime,
+              archivo_data: `data:${meta.mime};base64,${base64}`,
+            });
+            if (ok) {
+              creados++;
+              console.log(`  ✅ Pendiente creado: ${analysis.acreedor} — ${analysis.monto} (confianza: ${analysis.confianza})`);
+            } else {
+              console.log(`  ❌ No se pudo guardar en Supabase`);
+            }
+          } else {
+            console.log(`  ⚠️  La IA no pudo extraer los datos de "${meta.filename}"`);
+          }
+        }
+      } finally {
+        try { lock2.release(); } catch { /* noop */ }
+      }
+    } catch (err) {
+      mailsConError++;
+      console.error(`  ❌ No se pudo procesar este mail: ${err.message || err} — se salta y sigue con el resto`);
+    } finally {
+      try { await client2?.logout(); } catch { /* noop */ }
+    }
+  }
+
+  // El barrido de la Fase 1 ya recorrió TODO el rango — guardamos como
+  // procesado hasta ahí siempre, hayan fallado algunos mails puntuales o no.
+  // Los que fallaron se pueden cargar a mano; reintentarlos por siempre
+  // trabaría el avance para el resto.
+  await setLastUid(maxUidActual);
+
+  console.log(
+    `\nListo. Mails revisados: ${mensajesRevisados}. Con adjuntos candidatos: ${candidatosGlobal.length}. ` +
+    `Adjuntos procesados: ${procesados}. Pendientes creados: ${creados}. Mails con error: ${mailsConError}.`
+  );
 }
 
 process.on("unhandledRejection", (reason) => {
-  console.error("⚠️  unhandledRejection (esto explicaría un corte silencioso):", reason);
-  process.exitCode = 1;
+  console.error("⚠️  unhandledRejection:", reason);
 });
 process.on("uncaughtException", (err) => {
-  console.error("⚠️  uncaughtException (esto explicaría un corte silencioso):", err);
-  process.exitCode = 1;
+  console.error("⚠️  uncaughtException:", err);
 });
 
 main().catch((err) => {
