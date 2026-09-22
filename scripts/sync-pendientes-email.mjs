@@ -183,15 +183,20 @@ async function main() {
       }
 
       for (const meta of adjuntosMeta) {
+        console.log(`  → intentando adjunto "${meta.filename}" (${meta.mime}, ${(meta.size/1024).toFixed(0)}KB, part ${meta.part})`);
         if (meta.size > MAX_ADJUNTO_BYTES) {
           console.log(`  ⚠️  Adjunto "${meta.filename}" muy pesado (${(meta.size / 1024 / 1024).toFixed(1)}MB) — se salta`);
           continue;
         }
         procesados++;
         try {
+          console.log(`  → descargando...`);
           const { content } = await client.download(msg.uid, meta.part, { uid: true });
+          console.log(`  → descargado, convirtiendo a base64...`);
           const base64 = await streamToBase64(content);
+          console.log(`  → base64 listo (${base64.length} chars), llamando a la IA...`);
           const analysis = await analizarConIA(base64, meta.mime);
+          console.log(`  → respuesta de la IA:`, JSON.stringify(analysis));
 
           if (analysis?.acreedor && analysis?.monto) {
             const ok = await crearPendiente({
@@ -236,6 +241,15 @@ async function main() {
     await client.logout();
   }
 }
+
+process.on("unhandledRejection", (reason) => {
+  console.error("⚠️  unhandledRejection (esto explicaría un corte silencioso):", reason);
+  process.exitCode = 1;
+});
+process.on("uncaughtException", (err) => {
+  console.error("⚠️  uncaughtException (esto explicaría un corte silencioso):", err);
+  process.exitCode = 1;
+});
 
 main().catch((err) => {
   console.error("Error fatal:", err);
