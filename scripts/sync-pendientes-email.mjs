@@ -16,6 +16,8 @@ const IMAP_USER = process.env.IMAP_USER;
 const IMAP_PASSWORD = process.env.IMAP_PASSWORD;
 
 const MAX_ADJUNTO_BYTES = 15 * 1024 * 1024; // acá sí podemos ser generosos, no hay apuro de tiempo
+const MIN_IMAGEN_BYTES = 15 * 1024; // imágenes menores a esto casi siempre son logos de firma, no facturas
+const TIMEOUT_DESCARGA_MS = 20000; // si bajar un adjunto puntual se cuelga, lo salteamos
 
 for (const [k, v] of Object.entries({ SB_URL, SB_KEY, ANTHROPIC_KEY, IMAP_HOST, IMAP_USER, IMAP_PASSWORD })) {
   if (!v) {
@@ -77,6 +79,15 @@ async function streamToBase64(stream) {
   const chunks = [];
   for await (const chunk of stream) chunks.push(chunk);
   return Buffer.concat(chunks).toString("base64");
+}
+
+function conTimeout(promesa, ms, etiqueta) {
+  return Promise.race([
+    promesa,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error(`Timeout (${ms / 1000}s) en: ${etiqueta}`)), ms)
+    ),
+  ]);
 }
 
 async function analizarConIA(base64, mediaType) {
@@ -188,12 +199,20 @@ async function main() {
           console.log(`  ⚠️  Adjunto "${meta.filename}" muy pesado (${(meta.size / 1024 / 1024).toFixed(1)}MB) — se salta`);
           continue;
         }
+        if (meta.mime.startsWith("image/") && meta.size < MIN_IMAGEN_BYTES) {
+          console.log(`  ⏭️  Imagen "${meta.filename}" muy chica (${(meta.size / 1024).toFixed(0)}KB) — probablemente un logo de firma, se salta`);
+          continue;
+        }
         procesados++;
         try {
           console.log(`  → descargando...`);
-          const { content } = await client.download(msg.uid, meta.part, { uid: true });
+          const { content } = await conTimeout(
+            client.download(msg.uid, meta.part, { uid: true }),
+            TIMEOUT_DESCARGA_MS,
+            `descarga de "${meta.filename}"`
+          );
           console.log(`  → descargado, convirtiendo a base64...`);
-          const base64 = await streamToBase64(content);
+          const base64 = await conTimeout(streamToBase64(content), TIMEOUT_DESCARGA_MS, `lectura de "${meta.filename}"`);
           console.log(`  → base64 listo (${base64.length} chars), llamando a la IA...`);
           const analysis = await analizarConIA(base64, meta.mime);
           console.log(`  → respuesta de la IA:`, JSON.stringify(analysis));
