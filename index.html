@@ -699,7 +699,7 @@ body{display:flex;min-height:100vh}
     <div class="section-header">
       <span class="section-title">⏰ Pagos Pendientes</span>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-add" id="btnSyncMail" style="background:var(--teal);color:#fff;border-color:var(--teal-dark)" onclick="sincronizarMailPendientes()">📧 <span id="btnSyncMailTxt">Sincronizar mail</span></button>
+        
         <button class="btn btn-add" onclick="openNuevoPend()">+ Agregar pendiente</button>
       </div>
     </div>
@@ -1655,48 +1655,6 @@ async function verArchivoPend(id) {
     }
   } catch(e) {
     showStatus('No se pudo cargar el archivo', 'error');
-  }
-}
-
-async function sincronizarMailPendientes() {
-  const btn = document.getElementById('btnSyncMail');
-  const txt = document.getElementById('btnSyncMailTxt');
-  btn.disabled = true;
-  txt.textContent = 'Sincronizando...';
-  try {
-    const resp = await fetch(`${SB_URL}/functions/v1/sync-pendientes-email`, {
-      method: 'POST',
-      headers: {
-        'apikey': SB_KEY,
-        'Authorization': `Bearer ${SB_KEY}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    const data = await resp.json();
-    if(!resp.ok || data.ok === false) {
-      throw new Error(data.error || `HTTP ${resp.status}`);
-    }
-    await loadPendientes();
-    renderPendientes();
-    if(data.primeraVez) {
-      showStatus('🔧 Primera sincronización: se marcó el punto de partida. Los próximos mails nuevos con factura sí se van a cargar acá.', 'ok');
-    } else {
-      const creados = (data.resultados||[]).filter(r=>r.creado).length;
-      const total = data.procesados ?? (data.resultados||[]).length;
-      const sufijo = data.quedaronPendientes ? ' — quedan más por revisar, tocá el botón de nuevo para seguir.' : '';
-      showStatus(
-        total === 0
-          ? `📭 No hay facturas nuevas en el mail${sufijo}`
-          : `✅ Revisé ${total} adjunto${total!==1?'s':''} — se cargaron ${creados} pendiente${creados!==1?'s':''}.${sufijo}`,
-        'ok'
-      );
-    }
-  } catch(err) {
-    console.error('Error sincronizando mail:', err);
-    showStatus(`❌ No se pudo sincronizar el mail — ${err.message}`, 'error');
-  } finally {
-    btn.disabled = false;
-    txt.textContent = 'Sincronizar mail';
   }
 }
 
