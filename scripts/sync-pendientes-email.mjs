@@ -183,7 +183,9 @@ async function main() {
     console.log(`Procesando UIDs ${lastUid + 1} a ${maxUidActual} (${maxUidActual - lastUid} mails)...`);
 
     let contador = 0;
+    let conexionRota = false;
     for await (const msg of client.fetch(`${lastUid + 1}:${maxUidActual}`, { uid: true, envelope: true, bodyStructure: true }, { uid: true })) {
+      if (conexionRota) break;
       contador++;
       const fromAddr = msg.envelope?.from?.[0]?.address || "desconocido";
       const asunto = msg.envelope?.subject || "(sin asunto)";
@@ -194,6 +196,7 @@ async function main() {
       }
 
       for (const meta of adjuntosMeta) {
+        if (conexionRota) break;
         console.log(`  → intentando adjunto "${meta.filename}" (${meta.mime}, ${(meta.size/1024).toFixed(0)}KB, part ${meta.part})`);
         if (meta.size > MAX_ADJUNTO_BYTES) {
           console.log(`  ⚠️  Adjunto "${meta.filename}" muy pesado (${(meta.size / 1024 / 1024).toFixed(1)}MB) — se salta`);
@@ -205,14 +208,15 @@ async function main() {
         }
         procesados++;
         try {
-          console.log(`  → descargando...`);
-          const { content } = await conTimeout(
-            client.download(msg.uid, meta.part, { uid: true }),
+          console.log(`  → descargando (vía fetch)...`);
+          const fetched = await conTimeout(
+            client.fetchOne(msg.uid, { uid: true, bodyParts: [meta.part] }, { uid: true }),
             TIMEOUT_DESCARGA_MS,
             `descarga de "${meta.filename}"`
           );
-          console.log(`  → descargado, convirtiendo a base64...`);
-          const base64 = await conTimeout(streamToBase64(content), TIMEOUT_DESCARGA_MS, `lectura de "${meta.filename}"`);
+          const buf = fetched && fetched.bodyParts ? fetched.bodyParts.get(meta.part) : null;
+          if (!buf) throw new Error("No se obtuvo contenido para esta parte del mensaje");
+          const base64 = buf.toString("base64");
           console.log(`  → base64 listo (${base64.length} chars), llamando a la IA...`);
           const analysis = await analizarConIA(base64, meta.mime);
           console.log(`  → respuesta de la IA:`, JSON.stringify(analysis));
@@ -243,21 +247,28 @@ async function main() {
           }
         } catch (err) {
           console.error(`  ❌ Error procesando "${meta.filename}":`, err.message || err);
+          if (String(err.message || "").startsWith("Timeout")) {
+            conexionRota = true;
+            console.log(`  🛑 Se corta la corrida acá — la conexión puede haber quedado inestable. Lo que ya se guardó queda a salvo; la próxima corrida sigue desde el mail anterior a este.`);
+          }
         }
       }
 
-      // Guardamos progreso cada 20 mails, por si el job se corta por algún motivo.
-      if (contador % 20 === 0) {
+      // Guardamos progreso solo si este mail se terminó de revisar entero —
+      // así, si se corta a mitad de camino, la próxima corrida retoma este
+      // mismo mail desde cero en vez de saltearlo.
+      if (!conexionRota) {
         await setLastUid(msg.uid);
-        console.log(`  (progreso guardado hasta UID ${msg.uid})`);
       }
     }
 
-    await setLastUid(maxUidActual);
-    console.log(`\nListo. Mails revisados: ${contador}. Adjuntos procesados: ${procesados}. Pendientes creados: ${creados}.`);
+    if (!conexionRota) {
+      await setLastUid(maxUidActual);
+    }
+    console.log(`\nListo. Mails revisados: ${contador}. Adjuntos procesados: ${procesados}. Pendientes creados: ${creados}.${conexionRota ? " (corrida interrumpida por timeout — la próxima corrida sigue desde acá)" : ""}`);
   } finally {
-    lock.release();
-    await client.logout();
+    try { lock.release(); } catch { /* la conexión puede ya estar rota, no importa */ }
+    try { await client.logout(); } catch { /* idem */ }
   }
 }
 
