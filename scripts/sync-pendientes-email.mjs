@@ -6,6 +6,7 @@
 // así que es compatible con lo que ya está corrido.
 
 import { ImapFlow } from "imapflow";
+import { simpleParser } from "mailparser";
 
 const SB_URL = process.env.SUPABASE_URL;
 const SB_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
@@ -189,64 +190,68 @@ async function main() {
       contador++;
       const fromAddr = msg.envelope?.from?.[0]?.address || "desconocido";
       const asunto = msg.envelope?.subject || "(sin asunto)";
-      const adjuntosMeta = encontrarAdjuntos(msg.bodyStructure);
+      const candidatos = encontrarAdjuntos(msg.bodyStructure).filter((meta) => {
+        if (meta.size > MAX_ADJUNTO_BYTES) return false;
+        if (meta.mime.startsWith("image/") && meta.size < MIN_IMAGEN_BYTES) return false;
+        return true;
+      });
 
-      if (adjuntosMeta.length > 0) {
-        console.log(`[${contador}] UID ${msg.uid} — "${asunto}" de ${fromAddr} — ${adjuntosMeta.length} adjunto(s)`);
-      }
-
-      for (const meta of adjuntosMeta) {
-        if (conexionRota) break;
-        console.log(`  → intentando adjunto "${meta.filename}" (${meta.mime}, ${(meta.size/1024).toFixed(0)}KB, part ${meta.part})`);
-        if (meta.size > MAX_ADJUNTO_BYTES) {
-          console.log(`  ⚠️  Adjunto "${meta.filename}" muy pesado (${(meta.size / 1024 / 1024).toFixed(1)}MB) — se salta`);
-          continue;
-        }
-        if (meta.mime.startsWith("image/") && meta.size < MIN_IMAGEN_BYTES) {
-          console.log(`  ⏭️  Imagen "${meta.filename}" muy chica (${(meta.size / 1024).toFixed(0)}KB) — probablemente un logo de firma, se salta`);
-          continue;
-        }
-        procesados++;
+      if (candidatos.length > 0) {
+        console.log(`[${contador}] UID ${msg.uid} — "${asunto}" de ${fromAddr} — ${candidatos.length} adjunto(s) candidato(s)`);
         try {
-          console.log(`  → descargando (vía fetch)...`);
+          console.log(`  → bajando el mail completo (el servidor no soporta pedir partes sueltas)...`);
           const fetched = await conTimeout(
-            client.fetchOne(msg.uid, { uid: true, bodyParts: [meta.part] }, { uid: true }),
+            client.fetchOne(msg.uid, { uid: true, source: true }, { uid: true }),
             TIMEOUT_DESCARGA_MS,
-            `descarga de "${meta.filename}"`
+            `descarga completa del mail`
           );
-          const buf = fetched && fetched.bodyParts ? fetched.bodyParts.get(meta.part) : null;
-          if (!buf) throw new Error("No se obtuvo contenido para esta parte del mensaje");
-          const base64 = buf.toString("base64");
-          console.log(`  → base64 listo (${base64.length} chars), llamando a la IA...`);
-          const analysis = await analizarConIA(base64, meta.mime);
-          console.log(`  → respuesta de la IA:`, JSON.stringify(analysis));
+          if (!fetched || !fetched.source) throw new Error("No se obtuvo el mail completo");
+          const parsed = await simpleParser(fetched.source);
+          console.log(`  → mail parseado, ${parsed.attachments?.length || 0} adjuntos reales encontrados`);
 
-          if (analysis?.acreedor && analysis?.monto) {
-            const ok = await crearPendiente({
-              id: `pend_mail_${msg.uid}_${meta.part}_${Date.now()}`,
-              acreedor: analysis.acreedor,
-              moneda: analysis.moneda === "usd" ? "usd" : "peso",
-              monto: analysis.monto,
-              vto: analysis.vencimiento || null,
-              pagado: false,
-              cargado_por: "Automático (mail)",
-              origen: "email",
-              remitente: fromAddr,
-              archivo_name: meta.filename,
-              archivo_type: meta.mime,
-              archivo_data: `data:${meta.mime};base64,${base64}`,
-            });
-            if (ok) {
-              creados++;
-              console.log(`  ✅ Pendiente creado: ${analysis.acreedor} — ${analysis.monto} (confianza: ${analysis.confianza})`);
-            } else {
-              console.log(`  ❌ No se pudo guardar en Supabase`);
+          for (const meta of candidatos) {
+            const att = (parsed.attachments || []).find((a) => (a.filename || "") === meta.filename);
+            if (!att) {
+              console.log(`  ⚠️  No encontré "${meta.filename}" al parsear el mail — se salta`);
+              continue;
             }
-          } else {
-            console.log(`  ⚠️  La IA no pudo extraer los datos de "${meta.filename}"`);
+            procesados++;
+            try {
+              const base64 = att.content.toString("base64");
+              console.log(`  → base64 listo para "${meta.filename}" (${base64.length} chars), llamando a la IA...`);
+              const analysis = await analizarConIA(base64, meta.mime);
+              console.log(`  → respuesta de la IA:`, JSON.stringify(analysis));
+
+              if (analysis?.acreedor && analysis?.monto) {
+                const ok = await crearPendiente({
+                  id: `pend_mail_${msg.uid}_${meta.part}_${Date.now()}`,
+                  acreedor: analysis.acreedor,
+                  moneda: analysis.moneda === "usd" ? "usd" : "peso",
+                  monto: analysis.monto,
+                  vto: analysis.vencimiento || null,
+                  pagado: false,
+                  cargado_por: "Automático (mail)",
+                  origen: "email",
+                  remitente: fromAddr,
+                  archivo_name: meta.filename,
+                  archivo_type: meta.mime,
+                  archivo_data: `data:${meta.mime};base64,${base64}`,
+                });
+                if (ok) {
+                  creados++;
+                  console.log(`  ✅ Pendiente creado: ${analysis.acreedor} — ${analysis.monto} (confianza: ${analysis.confianza})`);
+                } else {
+                  console.log(`  ❌ No se pudo guardar en Supabase`);
+                }
+              } else {
+                console.log(`  ⚠️  La IA no pudo extraer los datos de "${meta.filename}"`);
+              }
+            } catch (err) {
+              console.error(`  ❌ Error analizando "${meta.filename}":`, err.message || err);
+            }
           }
         } catch (err) {
-          console.error(`  ❌ Error procesando "${meta.filename}":`, err.message || err);
+          console.error(`  ❌ Error bajando el mail completo:`, err.message || err);
           if (String(err.message || "").startsWith("Timeout")) {
             conexionRota = true;
             console.log(`  🛑 Se corta la corrida acá — la conexión puede haber quedado inestable. Lo que ya se guardó queda a salvo; la próxima corrida sigue desde el mail anterior a este.`);
