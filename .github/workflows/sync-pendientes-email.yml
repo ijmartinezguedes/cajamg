@@ -19,7 +19,7 @@ jobs:
           node-version: "20"
 
       - name: Instalar dependencias
-        run: npm install imapflow
+        run: npm install imapflow mailparser
 
       - name: Sincronizar mail
         env:
