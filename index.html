@@ -1063,10 +1063,10 @@ async function sbFetch(path, options={}) {
 }
 
 const sb = {
-  async getAll(table) {
+  async getAll(table, columns='*') {
     const orderCol = table === 'proveedores' ? 'nombre' : table === 'movimientos' ? 'fecha' : 'created_at';
     const limit = table === 'movimientos' ? '&limit=1000' : '';
-    return sbFetch(`${table}?select=*&order=${orderCol}.asc${limit}`);
+    return sbFetch(`${table}?select=${columns}&order=${orderCol}.asc${limit}`);
   },
   async upsert(table, data) {
     return sbFetch(table, {
@@ -1095,7 +1095,7 @@ function sbRowToProv(r) {
   return { id:r.id, nombre:r.nombre, cuenta1:r.cuenta1||'', cuenta2:r.cuenta2||'', contacto:r.contacto||'', email:r.email||'', tel:r.tel||'', rubro:r.rubro||'', obs:r.obs||'' };
 }
 function sbRowToPend(r) {
-  return { id:r.id, acreedor:r.acreedor, moneda:r.moneda, monto:r.monto, vto:r.vto, pagado:r.pagado, pagadoPor:r.pagado_por, cargadoPor:r.cargado_por, archivo: r.archivo_data ? {name:r.archivo_name, type:r.archivo_type, data:r.archivo_data} : null };
+  return { id:r.id, acreedor:r.acreedor, moneda:r.moneda, monto:r.monto, vto:r.vto, pagado:r.pagado, pagadoPor:r.pagado_por, cargadoPor:r.cargado_por, archivo: r.archivo_data ? {name:r.archivo_name, type:r.archivo_type, data:r.archivo_data} : null, archivoInfo: r.archivo_name ? {name:r.archivo_name, type:r.archivo_type} : null };
 }
 
 async function loadData() {
@@ -1622,12 +1622,40 @@ let pendFiltroActual = 'todos';
 
 async function loadPendientes() {
   try {
-    const rows = await sb.getAll('pendientes');
+    const rows = await sb.getAll('pendientes', 'id,acreedor,moneda,monto,vto,pagado,pagado_por,cargado_por,archivo_name,archivo_type');
     pendientes = rows.map(sbRowToPend);
   } catch(e) { pendientes = []; }
 }
 async function savePendientes() {
   // No se usa directamente — cada operación llama a su función específica
+}
+
+async function fetchArchivoPend(id) {
+  const rows = await sbFetch(`pendientes?select=archivo_data,archivo_name,archivo_type&id=eq.${id}`);
+  return rows[0] || null;
+}
+
+async function verArchivoPend(id) {
+  const p = pendientes.find(x=>x.id===id);
+  if(!p || !p.archivoInfo) return;
+  try {
+    const datos = await fetchArchivoPend(id);
+    if(!datos || !datos.archivo_data) { showStatus('No se pudo cargar el archivo', 'error'); return; }
+    if(p.archivo) { p.archivo.data = datos.archivo_data; } // cache liviano por si se vuelve a pedir
+    if(datos.archivo_type === 'application/pdf') {
+      const a = document.createElement('a');
+      a.href = datos.archivo_data;
+      a.download = datos.archivo_name || 'factura.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } else {
+      document.getElementById('imgViewerSrc').src = datos.archivo_data;
+      document.getElementById('imgViewer').classList.add('show');
+    }
+  } catch(e) {
+    showStatus('No se pudo cargar el archivo', 'error');
+  }
 }
 
 async function sincronizarMailPendientes() {
@@ -1739,12 +1767,12 @@ function renderPendientes() {
 
     // Adjunto
     let adjuntoHtml = `<span class="pend-adjunto-none">Sin adjunto</span>`;
-    if(p.archivo) {
-      if(p.archivo.type === 'application/pdf') {
-        adjuntoHtml = `<a class="pend-adjunto-pdf" href="${p.archivo.data}" download="${p.archivo.name}" title="Descargar ${p.archivo.name}" onclick="event.stopPropagation()">📄</a>
-          <span style="font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px">${p.archivo.name}</span>`;
+    if(p.archivoInfo) {
+      if(p.archivoInfo.type === 'application/pdf') {
+        adjuntoHtml = `<a class="pend-adjunto-pdf" href="javascript:void(0)" onclick="event.stopPropagation();verArchivoPend('${p.id}')" title="Descargar ${p.archivoInfo.name}">📄</a>
+          <span style="font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:120px">${p.archivoInfo.name}</span>`;
       } else {
-        adjuntoHtml = `<img class="pend-adjunto-img" src="${p.archivo.data}" alt="Factura" onclick="openImgViewer('${p.id}')" title="Ver imagen">`;
+        adjuntoHtml = `<span class="pend-adjunto-img" onclick="event.stopPropagation();verArchivoPend('${p.id}')" title="Ver imagen" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:20px">🖼️</span>`;
       }
     }
 
@@ -1844,9 +1872,13 @@ async function eliminarPend(id) {
 }
 function openImgViewer(id) {
   const p = pendientes.find(x=>x.id===id);
-  if(!p?.archivo) return;
-  document.getElementById('imgViewerSrc').src = p.archivo.data;
-  document.getElementById('imgViewer').classList.add('show');
+  if(!p) return;
+  if(p.archivo?.data) {
+    document.getElementById('imgViewerSrc').src = p.archivo.data;
+    document.getElementById('imgViewer').classList.add('show');
+  } else {
+    verArchivoPend(id);
+  }
 }
 function closeImgViewer(){ document.getElementById('imgViewer').classList.remove('show'); }
 
@@ -1874,17 +1906,17 @@ function editarPend(id) {
   const p = pendientes.find(x=>x.id===id);
   if(!p) return;
   pendEditId = id;
-  npFileData = p.archivo || null;
+  npFileData = null; // no se precarga el archivo pesado — solo se toca si el usuario elige uno nuevo
   document.getElementById('npAcreedor').value = p.acreedor || '';
   document.getElementById('npMonto').value = p.monto ?? '';
   document.getElementById('npMoneda').value = p.moneda || 'peso';
   document.getElementById('npVto').value = p.vto || '';
   document.getElementById('npFile').value = '';
-  if(p.archivo) {
+  if(p.archivoInfo) {
     const el = document.getElementById('npFileName');
-    el.textContent = `📎 ${p.archivo.name}`;
+    el.textContent = `📎 ${p.archivoInfo.name} (ya cargado — elegí otro archivo solo si querés reemplazarlo)`;
     el.style.display = 'block';
-    document.getElementById('btnAnalizarIA').style.display = 'flex';
+    document.getElementById('btnAnalizarIA').style.display = 'none';
   } else {
     document.getElementById('npFileName').style.display = 'none';
     document.getElementById('btnAnalizarIA').style.display = 'none';
@@ -2012,17 +2044,17 @@ async function submitNuevoPend() {
     if(idx === -1) { showStatus('No se encontró el pendiente a editar', 'error'); return; }
     const moneda = document.getElementById('npMoneda').value;
     const vto = document.getElementById('npVto').value || null;
-    const updated = {
-      ...pendientes[idx],
-      acreedor, moneda, monto, vto,
-      archivo: npFileData,
-    };
-    const sbRow = {
-      acreedor, moneda, monto, vto,
-      archivo_name: npFileData?.name || null,
-      archivo_type: npFileData?.type || null,
-      archivo_data: npFileData?.data || null,
-    };
+    const sbRow = { acreedor, moneda, monto, vto };
+    const updated = { ...pendientes[idx], acreedor, moneda, monto, vto };
+    // El archivo solo se toca si el usuario eligió uno nuevo en esta edición —
+    // si no, no se manda nada de eso y el archivo que ya estaba queda intacto.
+    if(npFileData) {
+      sbRow.archivo_name = npFileData.name;
+      sbRow.archivo_type = npFileData.type;
+      sbRow.archivo_data = npFileData.data;
+      updated.archivo = npFileData;
+      updated.archivoInfo = { name: npFileData.name, type: npFileData.type };
+    }
     await sb.update('pendientes', pendEditId, sbRow).catch(e=>console.error(e));
     pendientes[idx] = updated;
     closeNuevoPend();
@@ -2040,6 +2072,7 @@ async function submitNuevoPend() {
     pagado: false,
     cargadoPor: usuarioActual.nombre,
     archivo: npFileData,
+    archivoInfo: npFileData ? { name: npFileData.name, type: npFileData.type } : null,
   };
   // Guardar en Supabase
   const sbRow = {
