@@ -177,10 +177,10 @@ if (!resp.ok) {
 }
 
 async function existePendienteSimilar(acreedor, monto) {
-      const url = `${SB_URL}/rest/v1/pendientes?select=id&acreedor=ilike.${encodeURIComponent(acreedor)}&monto=eq.${monto}&limit=1`;
-      const res = await fetch(url, { headers: sbHeaders() });
-      const rows = await res.json().catch(() => []);
-      return Array.isArray(rows) && rows.length > 0;
+  const url = `${SB_URL}/rest/v1/pendientes?select=id&acreedor=ilike.${encodeURIComponent(acreedor)}&monto=eq.${monto}&limit=1`;
+  const res = await fetch(url, { headers: sbHeaders() });
+  const rows = await res.json().catch(() => []);
+  return Array.isArray(rows) && rows.length > 0;
 }
 
 async function crearPendiente(row) {
@@ -278,12 +278,12 @@ for (const cand of candidatosGlobal) {
       const esPropia = esFacturaPropia(analysis?.acreedor);
 
       if (analysis?.aplica && analysis?.acreedor && analysis?.monto && !esPropia) {
-const yaExiste = await existePendienteSimilar(analysis.acreedor, analysis.monto);
-                  if (yaExiste) {
-                                console.log(`  ⏭️  Ya existe un pendiente similar de "${analysis.acreedor}" por ${analysis.monto} — se salta (posible duplicado)`);
-                                continue;
-                  }
-                  const ok = await crearPendiente({
+        const yaExiste = await existePendienteSimilar(analysis.acreedor, analysis.monto);
+        if (yaExiste) {
+          console.log(`  ⏭️  Ya existe un pendiente similar de "${analysis.acreedor}" por ${analysis.monto} — se salta (posible duplicado)`);
+          continue;
+        }
+        const ok = await crearPendiente({
           id: `pend_mail_${cand.uid}_${meta.part}_${Date.now()}`,
           acreedor: analysis.acreedor,
           moneda: analysis.moneda === "usd" ? "usd" : "peso",
