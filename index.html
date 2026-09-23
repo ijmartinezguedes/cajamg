@@ -1135,9 +1135,30 @@ async function loadData() {
     proveedores = [...INIT_PROVS];
   }
   await loadPendientes();
-  await loadUsuario();
-  renderAll();
+    await loadUsuario();
+    actualizarListaProveedores();
+    actualizarListaCarpetas();
+    renderAll();
 }
+
+  function actualizarListaProveedores() {
+    const nombres = new Set();
+    proveedores.forEach(p => p.nombre && nombres.add(p.nombre.trim()));
+    pendientes.forEach(p => p.acreedor && nombres.add(p.acreedor.trim()));
+    const dl = document.getElementById('listaProveedores');
+    if(dl) dl.innerHTML = [...nombres].sort().map(n => `<option value="${n.replace(/"/g,'&quot;')}">`).join('');
+  }
+
+  function actualizarListaCarpetas() {
+    const carpetas = new Set();
+    movimientos.forEach(m => {
+      const dashIdx = m.desc.indexOf(' - ');
+      const c = dashIdx > 0 && m.desc.substring(0,dashIdx).match(/^C[\.\s]\d+/) ? m.desc.substring(0,dashIdx).trim() : '';
+      if(c) carpetas.add(c);
+                                                                                                                                           });
+    const dl = document.getElementById('listaCarpetas');
+    if(dl) dl.innerHTML = [...carpetas].sort().map(c => `<option value="${c.replace(/"/g,'&quot;')}">`).join('');
+  }
 
 async function saveMovimiento(m) {
   try { await sb.upsert('movimientos', movToSbRow(m)); } catch(e){ console.error('saveMovimiento:', e); }
