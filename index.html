@@ -2076,6 +2076,7 @@ async function submitNuevoPend() {
   };
   await sb.upsert('pendientes', sbRow).catch(e=>console.error(e));
   pendientes.push(p);
+    actualizarListaProveedores();
   closeNuevoPend();
   renderPendientes();
   showStatus('✓ Pendiente registrado');
