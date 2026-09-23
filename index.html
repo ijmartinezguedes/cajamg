@@ -810,7 +810,8 @@ body{display:flex;min-height:100vh}
       <div class="np-body">
         <div class="np-field">
           <label class="np-label">Acreedor / Proveedor</label>
-          <input type="text" class="np-input" id="npAcreedor" placeholder="Ej: ADAU, Gelisar, Mega6...">
+          <input type="text" class="np-input" id="npAcreedor" list="listaProveedores" placeholder="Ej: ADAU, Gelisar, Mega6...">
+          <datalist id="listaProveedores"></datalist>
         </div>
         <div class="np-row">
           <div class="np-field">
@@ -869,7 +870,8 @@ body{display:flex;min-height:100vh}
         </div>
         <div class="nm-field">
           <label class="nm-label">N° Carpeta</label>
-          <input type="text" class="nm-input" id="nmCarpeta" placeholder="C. 2280">
+          <input type="text" class="nm-input" id="nmCarpeta" list="listaCarpetas" placeholder="C. 2280">
+          <datalist id="listaCarpetas"></datalist>
         </div>
         <div class="nm-field full">
           <label class="nm-label">Descripción</label>
@@ -2015,9 +2017,20 @@ async function submitNuevoPend() {
     }
     await sb.update('pendientes', pendEditId, sbRow).catch(e=>console.error(e));
     pendientes[idx] = updated;
+    actualizarListaProveedores();
     closeNuevoPend();
     renderPendientes();
     showStatus('✓ Pendiente actualizado');
+    return;
+  }
+
+  const monedaSel = document.getElementById('npMoneda').value;
+  const dupPend = pendientes.find(x =>
+    x.acreedor.trim().toLowerCase() === acreedor.toLowerCase() &&
+    Math.abs(x.monto - monto) < 0.01 &&
+    x.moneda === monedaSel
+  );
+  if(dupPend && !confirm(`Ya hay un pendiente cargado de "${dupPend.acreedor}" por ${monto} (${monedaSel === 'usd' ? 'U$S' : '$'}). ¿Cargar igual?`)) {
     return;
   }
 
@@ -2261,9 +2274,19 @@ async function submitNuevoMov() {
     editingMovId = null;
   } else {
     // Nuevo movimiento
+    const dupMov = movimientos.find(x => {
+      const xMonto = x.ingPesos ?? x.egPesos ?? x.ingUSD ?? x.egUSD ?? 0;
+      return x.fecha === fecha &&
+        Math.abs(xMonto - monto) < 0.01 &&
+        x.desc.trim().toLowerCase() === descFull.trim().toLowerCase();
+    });
+    if(dupMov && !confirm(`Ya hay un movimiento igual cargado: ${dupMov.fecha} — ${dupMov.desc}. ¿Cargar igual?`)) {
+      return;
+    }
     const m = {id: `m_${Date.now()}`, ...movData};
     movimientos.push(m);
     await saveMovimiento(m);
+    actualizarListaCarpetas();
     showStatus('✓ Movimiento registrado correctamente');
   }
   closeNuevoMov();
@@ -2325,6 +2348,7 @@ function saveProveedor(){
   if(editProvId) proveedores=proveedores.map(x=>x.id===editProvId?p:x);
   else proveedores.push(p);
   saveProveedores();
+  actualizarListaProveedores();
   closeProvModal();
   renderCuentas();
   showStatus('✓ Acreedor guardado');
