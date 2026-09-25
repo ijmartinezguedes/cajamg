@@ -948,6 +948,19 @@ body{display:flex;min-height:100vh}
   </div>
 </div>
 
+  <!-- MODAL CONFIRMAR POSIBLE DUPLICADO -->
+  <div class="modal-overlay" id="dupModal">
+      <div class="modal">
+            <div class="modal-icon">🔎a</div>
+            <div class="modal-title">Parece que ya existea</div>
+            <div class="modal-text" id="dupModalText">a</div>
+            <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="resolverDupModal(false)">Cancelar</button>
+                    <button class="btn btn-add" onclick="resolverDupModal(true)">Cargar igual</button>
+            a</div>
+      a</div>
+  a</div>
+
 <!-- MODAL ACREEDOR -->
 <div class="modal-overlay" id="provModal">
   <div class="modal modal-form">
@@ -2051,9 +2064,10 @@ async function submitNuevoPend() {
     Math.abs(x.monto - monto) < 0.01 &&
     x.moneda === monedaSel
   );
-  if(dupPend && !confirm(`Ya hay un pendiente cargado de "${dupPend.acreedor}" por ${monto} (${monedaSel === 'usd' ? 'U$S' : '$'}). ¿Cargar igual?`)) {
-    return;
-  }
+if(dupPend) {
+      const seguir = await mostrarDupModal(`Ya hay un pendiente cargado de "${dupPend.acreedor}" por ${monto} (${monedaSel === 'usd' ? 'U$S' : '$'}). ¿Cargar igual?`);
+      if(!seguir) return;
+}
 
   const p = {
     id: `pend_${Date.now()}`,
@@ -2268,7 +2282,31 @@ function setTipo(t) {
   document.getElementById('nmBtnIng').className = 'nm-toggle' + (t==='ing'?' active-ing':'');
   document.getElementById('nmBtnEg').className  = 'nm-toggle' + (t==='eg'?' active-eg':'');
 }
-async function submitNuevoMov() {
+// Compara dos descripciones de movimiento de forma flexible (no exige texto
+  // idéntico): iguales, una contenida en la otra, o con buena parte de palabras
+  // en común.
+  function descripcionesSimilares(a, b) {
+    const na = (a || '').trim().toLowerCase();
+    const nb = (b || '').trim().toLowerCase();
+    if (!na || !nb) return false;
+    if (na === nb) return true;
+    if (na.includes(nb) || nb.includes(na)) return true;
+    const wa = new Set(na.split(/\s+/).filter(w => w.length > 2));
+    const wb = new Set(nb.split(/\s+/).filter(w => w.length > 2));
+    if (wa.size === 0 || wb.size === 0) return false;
+    let comunes = 0;
+    wa.forEach(w => { if (wb.has(w)) comunes++; });
+    return (comunes / Math.min(wa.size, wb.size)) >= 0.6;
+  }
+  
+  // Diferencia en días (absoluta) entre dos fechas 'YYYY-MM-DD'.
+  function diasEntreFechas(f1, f2) {
+    const d1 = new Date(f1 + 'T00:00:00');
+    const d2 = new Date(f2 + 'T00:00:00');
+    return Math.abs((d1 - d2) / (1000 * 60 * 60 * 24));
+  }
+  
+  async function submitNuevoMov() {
   const fecha = document.getElementById('nmFecha').value;
   const carpeta = document.getElementById('nmCarpeta').value.trim();
   const desc = document.getElementById('nmDesc').value.trim();
@@ -2296,15 +2334,16 @@ async function submitNuevoMov() {
     editingMovId = null;
   } else {
     // Nuevo movimiento
-    const dupMov = movimientos.find(x => {
-      const xMonto = x.ingPesos ?? x.egPesos ?? x.ingUSD ?? x.egUSD ?? 0;
-      return x.fecha === fecha &&
-        Math.abs(xMonto - monto) < 0.01 &&
-        x.desc.trim().toLowerCase() === descFull.trim().toLowerCase();
-    });
-    if(dupMov && !confirm(`Ya hay un movimiento igual cargado: ${dupMov.fecha} — ${dupMov.desc}. ¿Cargar igual?`)) {
-      return;
-    }
+const dupMov = movimientos.find(x => {
+        const xMonto = x.ingPesos ?? x.egPesos ?? x.ingUSD ?? x.egUSD ?? 0;
+        return Math.abs(xMonto - monto) < 0.01 &&
+          diasEntreFechas(x.fecha, fecha) <= 7 &&
+          descripcionesSimilares(x.desc, descFull);
+      });
+      if(dupMov) {
+        const seguir = await mostrarDupModal(`Ya hay un movimiento parecido cargado cerca de esa fecha: ${dupMov.fecha} — ${dupMov.desc}. ¿Cargar igual?`);
+        if(!seguir) return;
+  }
     const m = {id: `m_${Date.now()}`, ...movData};
     movimientos.push(m);
     await saveMovimiento(m);
@@ -2332,6 +2371,18 @@ async function confirmDelete(){
   renderAll();
   showStatus('✓ Movimiento eliminado');
 }
+
+  // ─── MODAL DE POSIBLE DUPLICADO (reemplaza confirm() nativo) ──────────────────
+  let dupModalResolve = null;
+  function mostrarDupModal(mensaje) {
+    document.getElementById('dupModalText').textContent = mensaje;
+    document.getElementById('dupModal').classList.add('show');
+    return new Promise(resolve => { dupModalResolve = resolve; });
+  }
+  function resolverDupModal(valor) {
+    document.getElementById('dupModal').classList.remove('show');
+    if(dupModalResolve) { dupModalResolve(valor); dupModalResolve = null; }
+  }
 
 // ─── PROVEEDORES ──────────────────────────────────────────────────────────────
 function openProvModal(id=null) {
